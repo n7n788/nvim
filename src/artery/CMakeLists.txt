@@ -91,6 +91,14 @@ if(TARGET INET)
     target_link_libraries(core PUBLIC INET)
 endif()
 
+if (TARGET lte)
+    message(STATUS "Enable SimuLte integaraton")
+    set_property(TARGET core APPEND PROPERTY SOURCES
+            lte/Mode4RadioDriver.cc
+            lte/Mode4RadioDriver.h)
+    target_link_libraries(core PUBLIC lte)
+endif()
+
 macro(add_artery_feature name)
     add_library(${name} SHARED ${ARGN})
     add_library(Artery::${name} ALIAS ${name})

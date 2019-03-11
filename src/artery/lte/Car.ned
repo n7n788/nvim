@@ -7,7 +7,7 @@ import inet.networklayer.contract.IRoutingTable;
 import inet.networklayer.contract.INetworkLayer;
 import inet.transportlayer.tcp.TCP;
 import inet.transportlayer.udp.UDP;
-import lte.stack.ILteNic;
+import lte.stack.phy.ILteNic;
 
 module Car extends artery.inet.Car
 {
@@ -50,7 +50,7 @@ module Car extends artery.inet.Car
         }
 
         udp: UDP if numUdpApps > 0 {
-            @display("p=250,125");
+            @display("p=150,25");
         }
 
         tcpApp[numTcpApps]: <> like ITCPApp {
@@ -58,7 +58,7 @@ module Car extends artery.inet.Car
         }
 
         tcp: TCP if numTcpApps > 0 {
-            @display("p=350,125");
+            @display("p=150,25");
         }
 
     connections allowunconnected:
