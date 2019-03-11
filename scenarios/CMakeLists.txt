@@ -24,6 +24,10 @@ if(TARGET lte)
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/simulte)
     add_opp_test(simulte SUFFIX cellular CONFIG VoIP-UpLink SIMTIME_LIMIT 10s)
     add_opp_test(simulte SUFFIX d2d CONFIG AlertMulticast SIMTIME_LIMIT 25s)
+    add_opp_run(simulte-cars
+        DEPENDENCY artery-lte
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/cars)
+    add_opp_test(simulte-cars SUFFIX d2d CONFIG D2D_MULTICAST SIMTIME_LIMIT 70s)
 endif()
 
 if(TARGET lte AND WITH_STORYBOARD)
