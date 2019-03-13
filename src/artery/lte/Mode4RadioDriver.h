@@ -3,6 +3,10 @@
 
 #include "artery/nic/ChannelLoadMeasurements.h"
 #include "artery/nic/RadioDriverBase.h"
+
+#include "common/LteCommon.h"
+#include "corenetwork/binder/LteBinder.h"
+
 #include <omnetpp/clistener.h>
 #include <omnetpp/csimplemodule.h>
 
@@ -27,6 +31,9 @@ class Mode4RadioDriver : public RadioDriverBase, public omnetpp::cListener
 		omnetpp::cMessage* mChannelLoadReport = nullptr;
 		omnetpp::simtime_t mChannelLoadReportInterval;
 		ChannelLoadMeasurements mChannelLoadMeasurements;
+
+		LteBinder* binder_;
+		MacNodeId nodeId_;
 };
 
 } // namespace artery

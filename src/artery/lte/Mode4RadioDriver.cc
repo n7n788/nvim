@@ -7,6 +7,8 @@
 #include "veins/modules/messages/WaveShortMessage_m.h"
 #include "veins/modules/utility/Consts80211p.h"
 
+#include "common/LteControlInfo.h"
+
 using namespace omnetpp;
 
 namespace artery
@@ -16,32 +18,24 @@ Register_Class(Mode4RadioDriver)
 
 namespace {
 
-LAddress::L2Type convert(const vanetza::MacAddress& mac)
+long convert(const vanetza::MacAddress& mac)
 {
-    if (mac == vanetza::cBroadcastMacAddress) {
-        return LAddress::L2BROADCAST();
-    } else {
-        LAddress::L2Type addr = 0;
-        for (unsigned i = 0; i < mac.octets.size(); ++i) {
-            addr <<= 8;
-            addr |= mac.octets[i];
-        }
-        return addr;
+    long addr = 0;
+    for (unsigned i = 0; i < mac.octets.size(); ++i) {
+        addr <<= 8;
+        addr |= mac.octets[i];
     }
+    return addr;
 }
 
-vanetza::MacAddress convert(LAddress::L2Type addr)
+vanetza::MacAddress convert(long addr)
 {
-    if (LAddress::isL2Broadcast(addr)) {
-        return vanetza::cBroadcastMacAddress;
-    } else {
-        vanetza::MacAddress mac;
-        for (unsigned i = mac.octets.size(); i > 0; --i) {
-            mac.octets[i - 1] = addr & 0xff;
-            addr >>= 8;
-        }
-        return mac;
+    vanetza::MacAddress mac;
+    for (unsigned i = mac.octets.size(); i > 0; --i) {
+        mac.octets[i - 1] = addr & 0xff;
+        addr >>= 8;
     }
+    return mac;
 }
 
 int user_priority(vanetza::AccessCategory ac)
@@ -82,11 +76,16 @@ void Mode4RadioDriver::initialize()
     mChannelLoadReport = new cMessage("report channel load");
     mChannelLoadReportInterval = par("channelLoadReportInterval");
     scheduleAt(simTime() + mChannelLoadReportInterval, mChannelLoadReport);
-
     auto properties = new RadioDriverProperties();
     // Mac1609_4 uses index of host as MAC address
     properties->LinkLayerAddress = vanetza::create_mac_address(mHost->getIndex());
     indicateProperties(properties);
+
+    binder_ = getBinder();
+
+    cModule *ue = getParentModule();
+    nodeId_ = binder_->registerNode(ue, UE, 0);
+    binder_->setMacNodeId(convert(properties->LinkLayerAddress), nodeId_);
 }
 
 void Mode4RadioDriver::handleMessage(cMessage* msg)
@@ -106,29 +105,35 @@ void Mode4RadioDriver::handleMessage(cMessage* msg)
 
 void Mode4RadioDriver::handleDataIndication(cMessage* packet)
 {
-    auto wsm = check_and_cast<WaveShortMessage*>(packet);
-    auto gn = wsm->decapsulate();
+    FlowControlInfoNonIp* lteControlInfo = check_and_cast<FlowControlInfoNonIp*>(packet->removeControlInfo());
     auto* indication = new GeoNetIndication();
-    indication->source = convert(wsm->getSenderAddress());
-    indication->destination = convert(wsm->getRecipientAddress());
-    gn->setControlInfo(indication);
-    delete wsm;
+    indication->source = convert(lteControlInfo->getSrcAddr());
+    indication->destination = convert(lteControlInfo->getDstAddr());
+    packet->setControlInfo(indication);
+    delete lteControlInfo;
 
-    indicateData(gn);
+    indicateData(packet);
 }
 
 void Mode4RadioDriver::handleDataRequest(cMessage* packet)
 {
     auto request = check_and_cast<GeoNetRequest*>(packet->removeControlInfo());
-    auto wsm = new WaveShortMessage();
-    wsm->encapsulate(check_and_cast<cPacket*>(packet));
-    wsm->setSenderAddress(convert(request->source_addr));
-    wsm->setRecipientAddress(convert(request->destination_addr));
-    wsm->setUserPriority(user_priority(request->access_category));
-    wsm->setChannelNumber(Channels::CCH);
+    auto lteControlInfo = new FlowControlInfoNonIp();
+
+    lteControlInfo->setSrcAddr(convert(request->source_addr));
+    lteControlInfo->setDstAddr(convert(request->destination_addr));
+    lteControlInfo->setPriority(user_priority(request->access_category));
+
+    if (request->destination_addr == vanetza::cBroadcastMacAddress)
+    {
+        lteControlInfo->setDirection(D2D_MULTI);
+    }
+
+    packet->setControlInfo(lteControlInfo);
+
 
     delete request;
-    send(wsm, mLowerLayerOut);
+    send(packet, mLowerLayerOut);
 }
 
 void Mode4RadioDriver::receiveSignal(omnetpp::cComponent*, omnetpp::simsignal_t signal, bool busy, omnetpp::cObject*)
