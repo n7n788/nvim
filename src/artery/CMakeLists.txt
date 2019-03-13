@@ -95,9 +95,7 @@ if (TARGET lte)
     message(STATUS "Enable SimuLte integaraton")
     set_property(TARGET core APPEND PROPERTY SOURCES
             lte/Mode4RadioDriver.cc
-            lte/Mode4RadioDriver.h
-            lte/Mode4Mobility.cc
-            lte/Mode4Mobility.h)
+            lte/Mode4RadioDriver.h)
     target_link_libraries(core PUBLIC lte)
 endif()
 

@@ -4,9 +4,11 @@ import artery.application.VehicleMiddleware;
 import artery.networking.Vanetza;
 import artery.nic.IRadioDriver;
 
+import inet.node.inet.INetworkNode;
+
 import lte.stack.phy.ILteNic;
 
-module Mode4Car extends artery.inet.PlainVehicle
+module Mode4Car extends artery.inet.PlainVehicle like INetworkNode
 {
     parameters:
         // LTE NIC
@@ -14,8 +16,16 @@ module Mode4Car extends artery.inet.PlainVehicle
         int macNodeId = default(0);
         int masterId;
 
+        @networkNode;
+        @labels(node,ethernet-node,wireless-node);
+
+        int numRadios = default(1);
+
     gates:
         input lteRadioIn @directIn;
+        input radioIn[numRadios] @directIn;
+        inout pppg[] @labels(PPPFrame-conn);
+        inout ethg[] @labels(EtherFrame-conn);
 
     submodules:
         lteNic: <nicType> like ILteNic {
@@ -46,9 +56,6 @@ module Mode4Car extends artery.inet.PlainVehicle
 
     connections allowunconnected:
         lteNic.radioIn <-- lteRadioIn;
-
-        //networkLayer.ifOut++ --> lteNic.upperLayerIn;
-        //networkLayer.ifIn++ <-- lteNic.upperLayerOut;
 
         radioDriver.upperLayer <--> vanetza.radioDriverData;
         radioDriver.properties --> vanetza.radioDriverProperties;
