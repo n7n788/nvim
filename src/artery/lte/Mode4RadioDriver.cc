@@ -105,7 +105,7 @@ void Mode4RadioDriver::handleMessage(cMessage* msg)
 
 void Mode4RadioDriver::handleDataIndication(cMessage* packet)
 {
-    FlowControlInfoNonIp* lteControlInfo = check_and_cast<FlowControlInfoNonIp*>(packet->removeControlInfo());
+    auto* lteControlInfo = check_and_cast<FlowControlInfoNonIp*>(packet->removeControlInfo());
     auto* indication = new GeoNetIndication();
     indication->source = convert(lteControlInfo->getSrcAddr());
     indication->destination = convert(lteControlInfo->getDstAddr());
@@ -123,6 +123,11 @@ void Mode4RadioDriver::handleDataRequest(cMessage* packet)
     lteControlInfo->setSrcAddr(convert(request->source_addr));
     lteControlInfo->setDstAddr(convert(request->destination_addr));
     lteControlInfo->setPriority(user_priority(request->access_category));
+
+    std::chrono::milliseconds lifetime_milli = std::chrono::duration_cast<std::chrono::milliseconds>(request->lifetime);
+
+    lteControlInfo->setDuration(lifetime_milli.count());
+    lteControlInfo->setCreationTime(packet->getCreationTime());
 
     if (request->destination_addr == vanetza::cBroadcastMacAddress)
     {
