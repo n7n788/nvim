@@ -128,7 +128,7 @@ void Mode4RadioDriver::handleDataRequest(cMessage* packet)
     lteControlInfo->setDstAddr(convert(request->destination_addr));
     lteControlInfo->setPriority(user_priority(request->access_category));
 
-    std::chrono::milliseconds lifetime_milli = std::chrono::duration_cast<std::chrono::milliseconds>(request->lifetime);
+    std::chrono::milliseconds lifetime_milli = std::chrono::duration_cast<std::chrono::milliseconds>(request->message_lifetime);
 
     lteControlInfo->setDuration(lifetime_milli.count());
     lteControlInfo->setCreationTime(packet->getCreationTime());
