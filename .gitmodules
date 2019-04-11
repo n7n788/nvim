@@ -11,11 +11,10 @@
 	branch = stable
 [submodule "extern/simulte"]
 	path = extern/simulte
-	url = https://github.com/riebl/simulte.git
-	branch = artery-integration
+	url = https://github.com/brianmc95/simulte.git
 [submodule "extern/vanetza"]
 	path = extern/vanetza
-	url = https://github.com/riebl/vanetza.git
+	url = https://github.com/brianmc95/vanetza.git
 [submodule "extern/veins"]
 	path = extern/veins
 	url = https://github.com/sommer/veins.git
