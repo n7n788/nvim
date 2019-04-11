@@ -18,6 +18,7 @@ class Mode4RadioDriver : public RadioDriverBase, public omnetpp::cListener
 	public:
 		void initialize() override;
 		void handleMessage(omnetpp::cMessage*) override;
+		void finish() override;
 
 	protected:
 		void handleDataIndication(omnetpp::cMessage*);

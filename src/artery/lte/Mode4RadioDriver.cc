@@ -88,8 +88,12 @@ void Mode4RadioDriver::initialize()
     binder_->setMacNodeId(convert(properties->LinkLayerAddress), nodeId_);
 }
 
-void Mode4RadioDriver::handleMessage(cMessage* msg)
+void Mode4RadioDriver::finish()
 {
+    binder_->unregisterNode(nodeId_);
+}
+
+void Mode4RadioDriver::handleMessage(cMessage* msg){
     if (msg == mChannelLoadReport) {
         double channel_load = mChannelLoadMeasurements.channel_load().value();
         emit(RadioDriverBase::ChannelLoadSignal, channel_load);
