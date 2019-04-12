@@ -12,7 +12,7 @@ module Mode4Car extends artery.inet.PlainVehicle like INetworkNode
 {
     parameters:
         // LTE NIC
-        string nicType = default("LteNicUeMode4D2D");
+        string nicType = default("LteNicVUeMode4");
         int macNodeId = default(0);
         int masterId;
 
