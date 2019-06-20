@@ -1,6 +1,5 @@
 package artery.lte;
 
-import inet.networklayer.configurator.ipv4.IPv4NetworkConfigurator;
 import inet.networklayer.ipv4.RoutingTableRecorder;
 import inet.node.ethernet.Eth10G;
 import inet.node.inet.Router;
@@ -22,12 +21,6 @@ network Mode4World extends artery.inet.World
         routingRecorder: RoutingTableRecorder {
             @display("p=700,75;is=s");
         }
-
-        configurator: IPv4NetworkConfigurator {
-            @display("p=700,125");
-            config = xmldoc("demo.xml");
-        }
-
 
         //# LTE modules
         channelControl: LteChannelControl {

@@ -14,7 +14,7 @@ module Mode4Car extends artery.inet.PlainVehicle like INetworkNode
         // LTE NIC
         string nicType = default("LteNicVUeMode4");
         int macNodeId = default(0);
-        int masterId;
+        int masterId = default(0); // Not yet removed from SimuLTE for Mode 4 simulations
 
         @networkNode;
         @labels(node,ethernet-node,wireless-node);
