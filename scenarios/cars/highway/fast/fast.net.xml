@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on Tue 26 Mar 2019 11:40:49 GMT by Eclipse SUMO netedit Version 1.1.0
+<!-- generated on Tue 21 May 2019 14:17:31 IST by Eclipse SUMO netedit Version 1.1.0
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/netconvertConfiguration.xsd">
 
     <input>
-        <sumo-net-file value="highway_fast.net.xml"/>
+        <sumo-net-file value="fast.net.xml"/>
     </input>
 
     <output>
-        <output-file value="highway_fast.net.xml"/>
+        <output-file value="fast.net.xml"/>
     </output>
 
     <processing>
