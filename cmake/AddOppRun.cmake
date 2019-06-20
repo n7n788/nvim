@@ -50,7 +50,7 @@ function(_opp_run_command _target _output)
         set(_exec ${_opp_run} -n ${_ned_folders} -l $<TARGET_FILE:${_target}>)
     else()
         _add_opp_run_libraries(${_target} _opp_libraries)
-        set(_exec ${_opp_run} -n ${_ned_folders} ${_opp_libraries})
+        set(_exec ${_opp_run} -u ${OMNETPP_RUN_ENV} -c ${SCENARIO_CONFIG} -n ${_ned_folders} ${_opp_libraries})
     endif()
 
     set(${_output} ${_exec} PARENT_SCOPE)
