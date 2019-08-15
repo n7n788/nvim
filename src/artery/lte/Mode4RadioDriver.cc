@@ -8,6 +8,7 @@
 #include "veins/modules/utility/Consts80211p.h"
 
 #include "common/LteControlInfo.h"
+#include "stack/phy/packet/cbr_m.h"
 
 using namespace omnetpp;
 
@@ -83,10 +84,10 @@ void Mode4RadioDriver::initialize()
     mLowerLayerOut = gate("lowerLayerOut");
     mLowerLayerIn = gate("lowerLayerIn");
 
-    mChannelLoadMeasurements.reset();
-    mChannelLoadReport = new cMessage("report channel load");
-    mChannelLoadReportInterval = par("channelLoadReportInterval");
-    scheduleAt(simTime() + mChannelLoadReportInterval, mChannelLoadReport);
+//    mChannelLoadMeasurements.reset();
+//    mChannelLoadReport = new cMessage("report channel load");
+//    mChannelLoadReportInterval = par("channelLoadReportInterval");
+//    scheduleAt(simTime() + mChannelLoadReportInterval, mChannelLoadReport);
     auto properties = new RadioDriverProperties();
     // Mac1609_4 uses index of host as MAC address
     properties->LinkLayerAddress = vanetza::create_mac_address(mHost->getIndex());
@@ -105,10 +106,11 @@ void Mode4RadioDriver::finish()
 }
 
 void Mode4RadioDriver::handleMessage(cMessage* msg){
-    if (msg == mChannelLoadReport) {
-        double channel_load = mChannelLoadMeasurements.channel_load().value();
+    if (msg->isName("CBR")) {
+        Cbr* cbrMsg = check_and_cast<Cbr*>(msg);
+        double channel_load = cbrMsg->getCbr();
         emit(RadioDriverBase::ChannelLoadSignal, channel_load);
-        scheduleAt(simTime() + mChannelLoadReportInterval, mChannelLoadReport);
+//        scheduleAt(simTime() + mChannelLoadReportInterval, mChannelLoadReport);
     } else if (RadioDriverBase::isDataRequest(msg)) {
         handleDataRequest(msg);
     } else if (msg->getArrivalGate() == mLowerLayerIn) {
