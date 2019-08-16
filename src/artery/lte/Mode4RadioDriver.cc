@@ -107,10 +107,9 @@ void Mode4RadioDriver::finish()
 
 void Mode4RadioDriver::handleMessage(cMessage* msg){
     if (msg->isName("CBR")) {
-        Cbr* cbrMsg = check_and_cast<Cbr*>(msg);
-        double channel_load = cbrMsg->getCbr();
+        Cbr* cbrPkt = check_and_cast<Cbr*>(msg);
+        double channel_load = cbrPkt->getCbr();
         emit(RadioDriverBase::ChannelLoadSignal, channel_load);
-//        scheduleAt(simTime() + mChannelLoadReportInterval, mChannelLoadReport);
     } else if (RadioDriverBase::isDataRequest(msg)) {
         handleDataRequest(msg);
     } else if (msg->getArrivalGate() == mLowerLayerIn) {
