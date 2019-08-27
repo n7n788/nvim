@@ -12,11 +12,16 @@ add_library(core SHARED
     application/ItsG5Service.cc
     application/LocalDynamicMap.cc
     application/Middleware.cc
+    application/MultiChannelPolicy.cc
+    application/NetworkInterface.cc
+    application/NetworkInterfaceTable.cc
     application/StationaryMiddleware.cc
     application/StoryboardSignal.cc
     application/Timer.cc
+    application/TransportDispatcher.cc
     application/VehicleDataProvider.cc
     application/VehicleMiddleware.cc
+    application/XmlMultiChannelPolicy.cc
     application/den/ImpactReductionUseCase.cc
     application/den/Memory.cc
     application/den/SuspendableUseCase.cc
@@ -40,6 +45,7 @@ add_library(core SHARED
     traci/VehicleType.cc
     utility/AsioScheduler.cc
     utility/AsioTask.cc
+    utility/Channel.cc
     utility/Identity.cc
     utility/IdentityRegistry.cc
     utility/FilterRules.cc
@@ -87,6 +93,7 @@ if(TARGET INET)
         inet/gemv2/SmallScaleVariation.cc
         inet/gemv2/VehicleIndex.cc
         inet/gemv2/Visualizer.cc
+        inet/VanetNakagamiFading.cc
         inet/VanetRx.cc)
     target_link_libraries(core PUBLIC INET)
 endif()
