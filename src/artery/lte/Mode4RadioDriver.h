@@ -10,8 +10,6 @@
 #include <omnetpp/clistener.h>
 #include <omnetpp/csimplemodule.h>
 
-#include <random>
-
 namespace artery
 {
 
@@ -31,17 +29,10 @@ class Mode4RadioDriver : public RadioDriverBase, public omnetpp::cListener
 		omnetpp::cModule* mHost = nullptr;
 		omnetpp::cGate* mLowerLayerOut = nullptr;
 		omnetpp::cGate* mLowerLayerIn = nullptr;
-		omnetpp::cMessage* mChannelLoadReport = nullptr;
-		omnetpp::simtime_t mChannelLoadReportInterval;
 		ChannelLoadMeasurements mChannelLoadMeasurements;
 
 		LteBinder* binder_;
 		MacNodeId nodeId_;
-
-		bool startUpComplete_;
-
-		std::random_device rand_device_;
-		std::mt19937 generator_;
 };
 
 } // namespace artery
