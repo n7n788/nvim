@@ -172,7 +172,7 @@ void CaService::sendCam(const SimTime& T_now)
 	std::unique_ptr<geonet::DownPacket> payload { new geonet::DownPacket() };
 	std::unique_ptr<convertible::byte_buffer> buffer { new CamByteBuffer(obj.shared_ptr()) };
 	payload->layer(OsiLayer::Application) = std::move(buffer);
-	this->request(request, std::move(payload));
+	this->request(request, std::move(payload), mNetworkInterfaceTable->select(0).get());
 }
 
 SimTime CaService::genCamDcc()
