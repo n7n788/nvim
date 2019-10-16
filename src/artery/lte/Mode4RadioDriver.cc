@@ -66,15 +66,9 @@ const simsignal_t channelBusySignal = cComponent::registerSignal("sigChannelBusy
 
 void Mode4RadioDriver::initialize()
 {
-
-    generator_.seed(rand_device_());
-    std::uniform_int_distribution<int> range(0,1000);
-    int startUp = range(generator_);
-
-    double delay = 0.001 * startUp;
-
     cMessage* startUpMessage = new cMessage("StartUpMsg");
-    scheduleAt(simTime() + delay, startUpMessage);
+    double delay = 0.001 * intuniform(0, 1000, 0);
+    scheduleAt((simTime() + delay).trunc(SIMTIME_MS), startUpMessage);
     startUpComplete_ = false;
 
     RadioDriverBase::initialize();
