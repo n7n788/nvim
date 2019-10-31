@@ -80,6 +80,8 @@ void Mode4RadioDriver::initialize()
 
     auto properties = new RadioDriverProperties();
     properties->LinkLayerAddress = vanetza::create_mac_address(mHost->getIndex());
+    // CCH used to ensure DCC configures correctly.
+    properties->ServingChannel = channel::CCH;
     indicateProperties(properties);
 
     binder_ = getBinder();
