@@ -29,12 +29,12 @@ class Mode4RadioDriver : public RadioDriverBase, public omnetpp::cListener
 		omnetpp::cModule* mHost = nullptr;
 		omnetpp::cGate* mLowerLayerOut = nullptr;
 		omnetpp::cGate* mLowerLayerIn = nullptr;
-		omnetpp::cMessage* mChannelLoadReport = nullptr;
-		omnetpp::simtime_t mChannelLoadReportInterval;
 		ChannelLoadMeasurements mChannelLoadMeasurements;
 
 		LteBinder* binder_;
 		MacNodeId nodeId_;
+
+		bool startUpComplete_;
 };
 
 } // namespace artery

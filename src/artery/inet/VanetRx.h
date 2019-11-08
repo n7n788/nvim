@@ -2,7 +2,8 @@
 #define ARTERY_VANETRX_H_KTVCYSUX
 
 #include "inet/linklayer/ieee80211/mac/Rx.h"
-#include <boost/circular_buffer.hpp>
+#include <deque>
+#include <tuple>
 
 namespace artery
 {
@@ -25,7 +26,7 @@ private:
     omnetpp::simtime_t channelReportInterval;
     omnetpp::cMessage* channelReportTrigger;
     omnetpp::simtime_t channelLoadLastUpdate;
-    boost::circular_buffer<bool> channelLoadSamples;
+    std::deque<std::tuple<unsigned, bool>> channelLoadSamples;
     double channelBusyRatio;
 };
 

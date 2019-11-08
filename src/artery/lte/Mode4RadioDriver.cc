@@ -8,6 +8,7 @@
 #include "veins/modules/utility/Consts80211p.h"
 
 #include "common/LteControlInfo.h"
+#include "stack/phy/packet/cbr_m.h"
 
 using namespace omnetpp;
 
@@ -65,6 +66,11 @@ const simsignal_t channelBusySignal = cComponent::registerSignal("sigChannelBusy
 
 void Mode4RadioDriver::initialize()
 {
+    cMessage* startUpMessage = new cMessage("StartUpMsg");
+    double delay = 0.001 * intuniform(0, 1000, 0);
+    scheduleAt((simTime() + delay).trunc(SIMTIME_MS), startUpMessage);
+    startUpComplete_ = false;
+
     RadioDriverBase::initialize();
     mHost = FindModule<>::findHost(this);
     mHost->subscribe(channelBusySignal, this);
@@ -72,13 +78,10 @@ void Mode4RadioDriver::initialize()
     mLowerLayerOut = gate("lowerLayerOut");
     mLowerLayerIn = gate("lowerLayerIn");
 
-    mChannelLoadMeasurements.reset();
-    mChannelLoadReport = new cMessage("report channel load");
-    mChannelLoadReportInterval = par("channelLoadReportInterval");
-    scheduleAt(simTime() + mChannelLoadReportInterval, mChannelLoadReport);
     auto properties = new RadioDriverProperties();
-    // Mac1609_4 uses index of host as MAC address
     properties->LinkLayerAddress = vanetza::create_mac_address(mHost->getIndex());
+    // CCH used to ensure DCC configures correctly.
+    properties->ServingChannel = channel::CCH;
     indicateProperties(properties);
 
     binder_ = getBinder();
@@ -94,14 +97,16 @@ void Mode4RadioDriver::finish()
 }
 
 void Mode4RadioDriver::handleMessage(cMessage* msg){
-    if (msg == mChannelLoadReport) {
-        double channel_load = mChannelLoadMeasurements.channel_load().value();
+    if (msg->isName("CBR")) {
+        Cbr* cbrPkt = check_and_cast<Cbr*>(msg);
+        double channel_load = cbrPkt->getCbr();
         emit(RadioDriverBase::ChannelLoadSignal, channel_load);
-        scheduleAt(simTime() + mChannelLoadReportInterval, mChannelLoadReport);
     } else if (RadioDriverBase::isDataRequest(msg)) {
         handleDataRequest(msg);
     } else if (msg->getArrivalGate() == mLowerLayerIn) {
         handleDataIndication(msg);
+    } else if (strcmp(msg->getName(), "StartUpMsg") == 0) {
+        startUpComplete_ = true;
     } else {
         throw cRuntimeError("unexpected message");
     }
@@ -121,28 +126,32 @@ void Mode4RadioDriver::handleDataIndication(cMessage* packet)
 
 void Mode4RadioDriver::handleDataRequest(cMessage* packet)
 {
-    auto request = check_and_cast<GeoNetRequest*>(packet->removeControlInfo());
-    auto lteControlInfo = new FlowControlInfoNonIp();
+    if (startUpComplete_) {
+        auto request = check_and_cast<GeoNetRequest *>(packet->removeControlInfo());
+        auto lteControlInfo = new FlowControlInfoNonIp();
 
-    lteControlInfo->setSrcAddr(convert(request->source_addr));
-    lteControlInfo->setDstAddr(convert(request->destination_addr));
-    lteControlInfo->setPriority(user_priority(request->access_category));
+        lteControlInfo->setSrcAddr(convert(request->source_addr));
+        lteControlInfo->setDstAddr(convert(request->destination_addr));
+        lteControlInfo->setPriority(user_priority(request->access_category));
 
-    std::chrono::milliseconds lifetime_milli = std::chrono::duration_cast<std::chrono::milliseconds>(request->message_lifetime);
+        std::chrono::milliseconds lifetime_milli = std::chrono::duration_cast<std::chrono::milliseconds>(
+            request->message_lifetime);
 
-    lteControlInfo->setDuration(lifetime_milli.count());
-    lteControlInfo->setCreationTime(packet->getCreationTime());
+        lteControlInfo->setDuration(lifetime_milli.count());
+        lteControlInfo->setCreationTime(packet->getCreationTime());
 
-    if (request->destination_addr == vanetza::cBroadcastMacAddress)
-    {
-        lteControlInfo->setDirection(D2D_MULTI);
+        if (request->destination_addr == vanetza::cBroadcastMacAddress) {
+            lteControlInfo->setDirection(D2D_MULTI);
+        }
+
+        packet->setControlInfo(lteControlInfo);
+
+
+        delete request;
+        send(packet, mLowerLayerOut);
+    } else {
+        delete packet;
     }
-
-    packet->setControlInfo(lteControlInfo);
-
-
-    delete request;
-    send(packet, mLowerLayerOut);
 }
 
 void Mode4RadioDriver::receiveSignal(omnetpp::cComponent*, omnetpp::simsignal_t signal, bool busy, omnetpp::cObject*)

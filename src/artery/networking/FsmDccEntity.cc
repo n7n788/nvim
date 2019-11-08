@@ -4,6 +4,7 @@
 #include <vanetza/dcc/fully_meshed_state_machine.hpp>
 #include <vanetza/dcc/gradual_state_machine.hpp>
 #include <vanetza/dcc/single_reactive_transmit_rate_control.hpp>
+#include <vanetza/dcc/no_transmit_rate_control.hpp>
 
 namespace artery
 {
@@ -54,6 +55,8 @@ void FsmDccEntity::initializeTransmitRateControl(const std::string& name)
         mTransmitRateControl.reset(new BurstyTransmitRateControl(*mStateMachine, *mRuntime));
     } else if (name == "StateMachine") {
         mTransmitRateControl.reset(new SingleReactiveTransmitRateControl(*mStateMachine, *mRuntime));
+    } else if (name == "NoTransmitRateControl") {
+       mTransmitRateControl.reset(new NoTransmitRateControl(* mStateMachine, *mRuntime));
     } else {
         error("Unknown DCC Transmit Rate Control \"%s\"", name.c_str());
     }
