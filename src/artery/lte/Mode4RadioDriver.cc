@@ -3,9 +3,7 @@
 #include "artery/nic/RadioDriverProperties.h"
 #include "artery/lte/Mode4RadioDriver.h"
 #include "veins/base/utils/FindModule.h"
-#include "veins/base/utils/SimpleAddress.h"
 #include "veins/modules/messages/WaveShortMessage_m.h"
-#include "veins/modules/utility/Consts80211p.h"
 
 #include "common/LteControlInfo.h"
 #include "stack/phy/packet/cbr_m.h"
