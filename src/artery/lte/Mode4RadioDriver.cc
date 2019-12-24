@@ -98,7 +98,6 @@ void Mode4RadioDriver::handleMessage(cMessage* msg){
     if (msg->isName("CBR")) {
         Cbr* cbrPkt = check_and_cast<Cbr*>(msg);
         double channel_load = cbrPkt->getCbr();
-	    delete cbrPkt;
         emit(RadioDriverBase::ChannelLoadSignal, channel_load);
     } else if (RadioDriverBase::isDataRequest(msg)) {
         handleDataRequest(msg);
