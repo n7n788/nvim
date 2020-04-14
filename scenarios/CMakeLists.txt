@@ -27,6 +27,9 @@ if(TARGET lte)
     add_opp_run(simulte-cars
         DEPENDENCY artery-lte
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/cars)
+    add_opp_run(simulte-validation
+            DEPENDENCY artery-lte
+            WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/Validation)
     add_opp_test(simulte-cars SUFFIX d2d CONFIG D2D_MULTICAST SIMTIME_LIMIT 70s)
 endif()
 
