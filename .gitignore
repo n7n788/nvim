@@ -1,7 +1,7 @@
 scenarios/**/*.pyc
 scenarios/*/results/*
 scenarios/*/.tkenvrc
-scenarios/personal-experiments/*
+scenarios/personal-*/
 
 src/artery/messages/*_m.cc
 src/artery/messages/*_m.h
