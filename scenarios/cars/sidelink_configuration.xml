@@ -12,6 +12,33 @@
 			<RestrictResourceReservationPeriod>
 				<parameter name="rri" type="double" value="1"/>
 			</RestrictResourceReservationPeriod>
+			<RestrictResourceReservationPeriod>
+				<parameter name="rri" type="double" value="2"/>
+			</RestrictResourceReservationPeriod>
+			<RestrictResourceReservationPeriod>
+				<parameter name="rri" type="double" value="3"/>
+			</RestrictResourceReservationPeriod>
+			<RestrictResourceReservationPeriod>
+				<parameter name="rri" type="double" value="4"/>
+			</RestrictResourceReservationPeriod>
+			<RestrictResourceReservationPeriod>
+				<parameter name="rri" type="double" value="5"/>
+			</RestrictResourceReservationPeriod>
+			<RestrictResourceReservationPeriod>
+				<parameter name="rri" type="double" value="6"/>
+			</RestrictResourceReservationPeriod>
+			<RestrictResourceReservationPeriod>
+				<parameter name="rri" type="double" value="7"/>
+			</RestrictResourceReservationPeriod>
+			<RestrictResourceReservationPeriod>
+				<parameter name="rri" type="double" value="8"/>
+			</RestrictResourceReservationPeriod>
+			<RestrictResourceReservationPeriod>
+				<parameter name="rri" type="double" value="9"/>
+			</RestrictResourceReservationPeriod>
+			<RestrictResourceReservationPeriod>
+				<parameter name="rri" type="double" value="10"/>
+			</RestrictResourceReservationPeriod>
 		</RestrictResourceReservationPeriodList>	
 				
 		<Sl-CBR-CommonTxConfigList>
