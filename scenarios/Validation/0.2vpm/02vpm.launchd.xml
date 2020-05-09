@@ -1,6 +1,0 @@
-<launch>
-  <basedir path="/home/brian/git_repos/simulte/simulations/Mode4/0.1vpm"/>
-  <copy file="02vpm.net.xml"/>
-  <copy file="02vpm.rou.xml"/>
-  <copy file="02vpm.sumo.cfg" type="config"/>
-</launch>
