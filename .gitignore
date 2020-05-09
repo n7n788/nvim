@@ -1,6 +1,8 @@
 scenarios/**/*.pyc
 scenarios/*/results/*
 scenarios/*/.tkenvrc
+scenarios/personal-experiments/*
+
 src/artery/messages/*_m.cc
 src/artery/messages/*_m.h
 cmake-build*
