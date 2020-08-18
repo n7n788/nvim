@@ -35,6 +35,9 @@ class Mode4RadioDriver : public RadioDriverBase, public omnetpp::cListener
 		MacNodeId nodeId_;
 
 		bool startUpComplete_;
+		bool trafficPattern3GPP_;
+		int largePacketCountDown_;
+		bool addStartUpDelay_;
 };
 
 } // namespace artery

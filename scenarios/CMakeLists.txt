@@ -27,15 +27,24 @@ if(TARGET lte)
     add_opp_run(simulte-cars
         DEPENDENCY artery-lte
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/cars)
+    add_opp_run(simulte-Mode4
+            DEPENDENCY artery-lte
+            WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/Mode4)
+    add_opp_run(simulte-Example
+            DEPENDENCY artery-lte
+            WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/example)
     add_opp_run(simulte-validation
             DEPENDENCY artery-lte
-            WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/Validation)
+            WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/Mode4-Validation)
     add_opp_run(personal-experiments
             DEPENDENCY artery-lte
             WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/personal-experiments)
     add_opp_run(personal-Validation
             DEPENDENCY artery-lte
             WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/personal-Validation)
+    add_opp_run(personal-non-periodic
+            DEPENDENCY artery-lte
+            WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/personal-non-periodic)
     add_opp_test(simulte-cars SUFFIX d2d CONFIG D2D_MULTICAST SIMTIME_LIMIT 70s)
 endif()
 

@@ -31,6 +31,9 @@ simple CaService like ItsG5Service
         double minInterval @unit(s) = default(0.1s);
         double maxInterval @unit(s) = default(1.0s);
 
+        bool exponentialNonPeriodic = default(false);
+        double exponentialMean @unit(s) = default(0.05s);
+
         // generate at fixed rate (using minInterval, optionally restricted by DCC)
         bool fixedRate = default(false);
 

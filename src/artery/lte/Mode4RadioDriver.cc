@@ -46,7 +46,7 @@ int user_priority(vanetza::AccessCategory ac)
             up = 1;
             break;
         case AC::BE:
-            up = 3;
+            up = 0;
             break;
         case AC::VI:
             up = 5;
@@ -64,10 +64,15 @@ const simsignal_t channelBusySignal = cComponent::registerSignal("sigChannelBusy
 
 void Mode4RadioDriver::initialize()
 {
-    cMessage* startUpMessage = new cMessage("StartUpMsg");
-    double delay = 0.001 * intuniform(0, 1000, 0);
-    scheduleAt((simTime() + delay).trunc(SIMTIME_MS), startUpMessage);
-    startUpComplete_ = false;
+    addStartUpDelay_ = par("addStartUpDelay");
+    if (addStartUpDelay_) {
+        cMessage *startUpMessage = new cMessage("StartUpMsg");
+        double delay = 0.001 * intuniform(0, 1000, 0);
+        scheduleAt((simTime() + delay).trunc(SIMTIME_MS), startUpMessage);
+        startUpComplete_ = false;
+    } else {
+        startUpComplete_ = true;
+    }
 
     RadioDriverBase::initialize();
     mHost = FindModule<>::findHost(this);

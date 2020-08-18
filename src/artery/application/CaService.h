@@ -48,6 +48,8 @@ class CaService : public ItsG5BaseService
 		omnetpp::SimTime mGenCamMin;
 		omnetpp::SimTime mGenCamMax;
 		omnetpp::SimTime mGenCam;
+		omnetpp::SimTime mExponentialMean;
+		omnetpp::SimTime mGenCamNonPeriodic;
 		unsigned mGenCamLowDynamicsCounter;
 		unsigned mGenCamLowDynamicsLimit;
 		Position mLastCamPosition;
@@ -60,6 +62,8 @@ class CaService : public ItsG5BaseService
 		vanetza::units::Velocity mSpeedDelta;
 		bool mDccRestriction;
 		bool mFixedRate;
+		bool mExponentialNonPeriodic;
+        omnetpp::SimTime startUpTime;
 };
 
 vanetza::asn1::Cam createCooperativeAwarenessMessage(const VehicleDataProvider&, uint16_t genDeltaTime);

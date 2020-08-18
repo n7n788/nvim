@@ -46,6 +46,7 @@ Define_Module(CaService)
 
 CaService::CaService() :
 		mGenCamMin { 100, SIMTIME_MS },
+		mExponentialMean { 50, SIMTIME_MS },
 		mGenCamMax { 1000, SIMTIME_MS },
 		mGenCam(mGenCamMax),
 		mGenCamLowDynamicsCounter(0),
@@ -64,6 +65,9 @@ void CaService::initialize()
 	// avoid unreasonable high elapsed time values for newly inserted vehicles
 	mLastCamTimestamp = simTime();
 
+    double delay = 0.001 * intuniform(0, 1000, 0);
+    startUpTime = simTime() + delay;
+
 	// first generated CAM shall include the low frequency container
 	mLastLowCamTimestamp = mLastCamTimestamp - artery::simtime_cast(scLowFrequencyContainerInterval);
 
@@ -78,6 +82,9 @@ void CaService::initialize()
 
 	mDccRestriction = par("withDccRestriction");
 	mFixedRate = par("fixedRate");
+    mExponentialNonPeriodic = par( "exponentialNonPeriodic");
+    mExponentialMean = par("exponentialMean");
+    mGenCamNonPeriodic = mGenCamMin + exponential(mExponentialMean);
 
 	// look up primary channel for CA
 	ChannelNumber mPrimaryChannel = getFacilities().get_const<MultiChannelPolicy>().primaryChannel(vanetza::aid::CA);
@@ -108,11 +115,22 @@ void CaService::checkTriggeringConditions(const SimTime& T_now)
 	SimTime& T_GenCam = mGenCam;
 	const SimTime& T_GenCamMin = mGenCamMin;
 	const SimTime& T_GenCamMax = mGenCamMax;
-	const SimTime T_GenCamDcc = mDccRestriction ? genCamDcc() : mGenCamMin;
+	const SimTime& T_GenCamNonPeriodic = mGenCamNonPeriodic;
+    const SimTime& T_GenCamDcc = genCamDcc();
+
+    SimTime T_GenCamFinal = T_GenCamMin;
+	if (mDccRestriction) {
+        T_GenCamFinal = T_GenCamDcc;
+    } else if (mExponentialNonPeriodic) {
+        T_GenCamFinal = T_GenCamNonPeriodic;
+        // Need to update the time for next sending
+        mGenCamNonPeriodic = mGenCamMin + exponential(mExponentialMean, 0);
+	}
+
 	const SimTime T_elapsed = T_now - mLastCamTimestamp;
 
-	if (T_elapsed >= T_GenCamDcc) {
-		if (mFixedRate) {
+	if (T_elapsed >= T_GenCamFinal & T_now > startUpTime) {
+		if (mFixedRate || mExponentialNonPeriodic) {
 			sendCam(T_now);
 		} else if (checkHeadingDelta() || checkPositionDelta() || checkSpeedDelta()) {
 			sendCam(T_now);
