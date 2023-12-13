@@ -182,4 +182,11 @@ void RadarSensor::refreshDisplay() const
     }
 }
 
+// Define_Module(RadarSensor);
+
+    // const std::string& RadarSensor::getSensorCategory() const
+    // {
+    //     static const std::string category = "Radar";
+    //     return category;
+    // }
 } // namespace artery

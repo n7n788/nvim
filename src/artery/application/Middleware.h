@@ -15,6 +15,7 @@
 #include "artery/application/StationType.h"
 #include "artery/application/Timer.h"
 #include "artery/application/TransportDispatcher.h"
+#include "artery/application/VehicleDataProvider.h" // 追加
 #include "artery/utility/Identity.h"
 #include <omnetpp/clistener.h>
 #include <omnetpp/csimplemodule.h>
@@ -80,6 +81,7 @@ class Middleware : public omnetpp::cSimpleModule, public omnetpp::cListener
         Timer mTimer;
         Identity mIdentity;
         LocalDynamicMap mLocalDynamicMap;
+        // VehicleDataProvider mVehicleDataProvider; // 追加
         Facilities mFacilities;
         StationType mStationType;
 

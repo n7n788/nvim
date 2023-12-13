@@ -8,6 +8,7 @@
 #define ARTERY_CASERVICE_H_
 
 #include "artery/application/ItsG5BaseService.h"
+#include "artery/application/Middleware.h"
 #include "artery/utility/Channel.h"
 #include "artery/utility/Geometry.h"
 #include <vanetza/asn1/cam.hpp>
@@ -15,6 +16,7 @@
 #include <vanetza/units/angle.hpp>
 #include <vanetza/units/velocity.hpp>
 #include <omnetpp/simtime.h>
+#include <string>
 
 namespace artery
 {
@@ -64,10 +66,20 @@ class CaService : public ItsG5BaseService
 		bool mFixedRate;
 		bool mExponentialNonPeriodic;
         omnetpp::SimTime startUpTime;
+
+		// 追加
+		std::string mTraciId; // sumoのID 
+		long mCount; // 送信したcamの個数
+
+		// シグナル変数
+		omnetpp::simsignal_t camGenerationTimeSignal;
+		omnetpp::simsignal_t camSourceIdSignal;
+		// omnetpp::simsignal_t camByteSignal;
+		// omnetpp::simsignal_t camReceivedByteSignal;
 };
 
-vanetza::asn1::Cam createCooperativeAwarenessMessage(const VehicleDataProvider&, uint16_t genDeltaTime);
-void addLowFrequencyContainer(vanetza::asn1::Cam&);
+vanetza::asn1::Cam createCooperativeAwarenessMessage(const VehicleDataProvider&, uint16_t genDeltaTime, long mCount);
+void addLowFrequencyContainer(vanetza::asn1::Cam&, unsigned);
 
 } // namespace artery
 

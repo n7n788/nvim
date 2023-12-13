@@ -8,8 +8,11 @@ package artery.envmod;
 
 import artery.envmod.LocalEnvironmentModel;
 import artery.inet.Car;
+// 追加
+import artery.lte.Mode4Car;
 
-module Car extends artery.inet.Car
+// module Car extends artery.inet.Car
+module Car extends artery.lte.Mode4Car
 {
     submodules:
         environmentModel: LocalEnvironmentModel {

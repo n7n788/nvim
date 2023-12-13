@@ -10,6 +10,6 @@ moduleinterface Radar
 {
     parameters:
         double fovRange @unit(m);
-        double fovAngle; // opening angle in degree
+        double fovAngle; // degree
         int numSegments;
 }

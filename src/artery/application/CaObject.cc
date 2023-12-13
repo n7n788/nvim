@@ -63,6 +63,7 @@ class CamStationIdResultFilter : public cObjectResultFilter
 protected:
     void receiveSignal(cResultFilter* prev, simtime_t_cref t, cObject* object, cObject* details) override
     {
+        // printf("CamStationIdResultFilter\n");
         if (auto cam = dynamic_cast<CaObject*>(object)) {
             const auto id = cam->asn1()->header.stationID;
             fire(this, t, id, details);
@@ -78,6 +79,7 @@ class CamGenerationDeltaTimeResultFilter : public cObjectResultFilter
 protected:
     void receiveSignal(cResultFilter* prev, simtime_t_cref t, cObject* object, cObject* details) override
     {
+        // printf("CamGenerationDeltaTimeResultFilter");
         if (auto cam = dynamic_cast<CaObject*>(object)) {
             const auto genDeltaTime = cam->asn1()->cam.generationDeltaTime;
             fire(this, t, genDeltaTime, details);

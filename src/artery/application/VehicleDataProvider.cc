@@ -179,6 +179,9 @@ void VehicleDataProvider::update(const traci::VehicleController* controller)
 
 	calculateCurvature();
 	calculateCurvatureConfidence();
+	
+	// cout << "time: " << omnetpp::simTime() << ", " << 
+	// printf("vehicle update\n");
 }
 
 double VehicleDataProvider::mapOntoConfidence(AngularAcceleration x) const

@@ -20,6 +20,9 @@ module Vanetza
             @display("p=150,50;i=misc/globe");
         }
 
+        // デフォルトではFsmDCCなので、omnetpp.iniで指定するものを変えることが可能
+        // "LimericDccEntity" or "FsmDccEntity"
+        // dcc: <default("FsmDccEntity")> like IDccEntity {
         dcc: <default("FsmDccEntity")> like IDccEntity {
             @display("p=50,150;i=block/buffer");
         }

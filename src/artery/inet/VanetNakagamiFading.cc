@@ -80,6 +80,7 @@ double VanetNakagamiFading::computeNakagamiPathLoss(inet::m lambda, inet::m dist
 {
     const double shapeFactor = lookUpShapeFactor(dist);
     const double omega = computeDualSlopePathLoss(lambda, dist);
+    // std::cout << "VanetNakagami" << "\n";
     return gamma_d(shapeFactor, omega / shapeFactor);
 }
 

@@ -22,6 +22,8 @@ struct SensorConfig
 {
         std::string egoID; /*< ego ID of the vehicle carrying this sensor */
         unsigned int sensorID = 0; /*< uniqu sensor ID */
+        
+        // std::string sensorName; /*追加*/
 };
 
 struct SensorConfigRadar : public SensorConfig

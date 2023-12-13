@@ -87,6 +87,7 @@ EnvironmentModelObject::EnvironmentModelObject(const traci::VehicleController* v
 
 void EnvironmentModelObject::update()
 {
+    // printf("EnvironmentModelObject\n");
     // Update the internal vdp
     VehicleDataProvider::update(mVehicleController);
 

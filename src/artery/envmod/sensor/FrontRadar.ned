@@ -7,9 +7,15 @@
 package artery.envmod.sensor;
 
 simple FrontRadar like Radar
+// simple FrontRadar
 {
     parameters:
         double fovRange @unit(m) = default(80.0 m);
         double fovAngle = default(60.0); // degree
         int numSegments = default(10);
 }
+
+// simple FrontRadar extends RadarSensor
+// {
+//     attachmentPoint = "FRONT";
+// }

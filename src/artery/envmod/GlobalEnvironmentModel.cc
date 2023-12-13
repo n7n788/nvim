@@ -19,7 +19,7 @@
 #include <inet/common/ModuleAccess.h>
 #include <algorithm>
 #include <array>
-
+#include <vector> //追加
 using namespace omnetpp;
 
 using LineOfSight = std::array<artery::Position, 2>;
@@ -49,6 +49,8 @@ GlobalEnvironmentModel::~GlobalEnvironmentModel()
     clear();
 }
 
+// traciからnodeの更新シグナルを受信すると実行されるメソッド
+// 車両の情報（位置や速度）を更新
 void GlobalEnvironmentModel::refresh()
 {
     for (auto& object : mObjects) {
@@ -180,8 +182,13 @@ SensorDetection GlobalEnvironmentModel::detectObjects(const SensorConfigRadar& c
                 if (noVehicleOccultation && noObstacleOccultation) {
                     if (detection.objects.empty() || detection.objects.back() != object) {
                         detection.objects.push_back(object);
+                        detection.measurements.push_back(omnetpp::simTime());
+                        detection.posXs.push_back(object->getVehicleData().position().x.value());
+                        detection.posYs.push_back(object->getVehicleData().position().y.value());
+                        detection.speeds.push_back(object->getVehicleData().speed().value());
+                        detection.headings.push_back(object->getVehicleData().heading().value());
+                        // detection.risks.push_back(-1);                    
                     }
-
                     if (config.visualizationConfig.linesOfSight) {
                         detection.visiblePoints.push_back(objectPoint);
                     } else {
@@ -194,6 +201,7 @@ SensorDetection GlobalEnvironmentModel::detectObjects(const SensorConfigRadar& c
     } else {
         for (const auto& objectId : preselObjectsInSensorRange) {
             detection.objects.push_back(getObject(objectId));
+            detection.measurements.push_back(omnetpp::simTime());
         }
     }
 
@@ -270,6 +278,7 @@ void GlobalEnvironmentModel::receiveSignal(cComponent*, simsignal_t signal, cons
     }
 }
 
+//traciからNodeの更新シグナルを受信したら、refresh()メソッドを実行
 void GlobalEnvironmentModel::receiveSignal(cComponent*, simsignal_t signal, unsigned long nodes, cObject* obj)
 {
     if (signal == traciNodeUpdateSignal) {
@@ -305,4 +314,14 @@ std::shared_ptr<EnvironmentModelObject> GlobalEnvironmentModel::getObject(const 
     return found != mObjects.end() ? *found : nullptr;
 }
 
+// すべてのオブジェクトを返すメソッド
+std::vector<std::shared_ptr<EnvironmentModelObject>> GlobalEnvironmentModel::getAllObject()
+{
+    std::vector<std::shared_ptr<EnvironmentModelObject>> objs;
+    for (auto obj: mObjects) {
+        objs.push_back(obj);
+    }
+    return objs;
+}
 } // namespace artery
+

@@ -20,7 +20,9 @@ namespace artery
 struct SensorDetection
 {
     std::vector<Position> sensorCone;
-    std::list<std::shared_ptr<EnvironmentModelObject>> objects;
+    std::vector<std::shared_ptr<EnvironmentModelObject>> objects; // 物体のリスト
+    std::vector<omnetpp::SimTime> measurements; //各物体を認識した時刻のリスト
+    std::vector<double> posXs, posYs, speeds, headings; /*risks*/;
     std::list<std::shared_ptr<EnvironmentModelObstacle>> obstacles;
     std::list<Position> visiblePoints; // LOS = one of these points and first of sensorCone
 };

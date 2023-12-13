@@ -13,6 +13,9 @@
 #include <omnetpp/ccanvas.h>
 #include <memory>
 
+// 追加
+// #include "artery/envmod/sensor/FovSensor.h"
+
 namespace artery
 {
 
@@ -58,6 +61,12 @@ private:
     omnetpp::cGroupFigure* mObstaclesFigure;
 };
 
+// 追加
+// class RadarSensor : public FovSensor
+// {
+//     public:
+//         const std::string& getSensorCategory() const override;
+// };
 } // namespace artery
 
 #endif /* ENVMOD_RADARSENSOR_H_BCY7WDMB */

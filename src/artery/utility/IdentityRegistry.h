@@ -40,10 +40,11 @@ public:
         return result;
     }
 
+    
     struct traci {};
     struct application {};
 
-private:
+// private:
     boost::multi_index_container<Identity,
         boost::multi_index::indexed_by<
             boost::multi_index::ordered_unique<

@@ -6,6 +6,9 @@
 #include <omnetpp/csimplemodule.h>
 #include <vanetza/common/position_provider.hpp>
 
+// 追加
+#include "artery/networking/PositionProvider.h"
+
 namespace traci { class VehicleController; }
 
 namespace artery
@@ -15,7 +18,7 @@ class Runtime;
 
 class VehiclePositionProvider :
     public omnetpp::cSimpleModule, public omnetpp::cListener,
-    public vanetza::PositionProvider
+    /*追加*/ public artery::PositionProvider, public vanetza::PositionProvider
 {
     public:
         // cSimpleModule
@@ -24,6 +27,11 @@ class VehiclePositionProvider :
 
         // cListener
         void receiveSignal(omnetpp::cComponent*, omnetpp::simsignal_t, omnetpp::cObject*, omnetpp::cObject*) override;
+
+        // 追加
+        // PositionProvider
+        Position getCartesianPosition() const override;
+        GeoPosition getGeodeticPosition() const override;
 
         // PositionProvider
         const vanetza::PositionFix& position_fix() override { return mPositionFix; }

@@ -22,4 +22,7 @@ simple Middleware like IMiddleware
 		string datetime;
 		xml services;
 		xml mcoPolicy = default(xml("<mco default=\"CCH\" />"));
+		
+		// 追加
+		string positionProviderModule = default(".vanetza[0].position");
 }

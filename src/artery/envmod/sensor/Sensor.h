@@ -10,6 +10,8 @@
 #include "artery/envmod/sensor/FieldOfView.h"
 #include "artery/envmod/sensor/SensorVisualizationConfig.h"
 #include "artery/envmod/sensor/SensorPosition.h"
+// 追加
+// #include "artery/envmod/sensor/SensorDetection.h"
 #include <omnetpp/csimplemodule.h>
 #include <string>
 
@@ -26,6 +28,11 @@ public:
     virtual SensorPosition position() const = 0;
     virtual omnetpp::SimTime getValidityPeriod() const = 0;
     virtual const std::string& getSensorCategory() const = 0;
+
+    // // 追加
+    // virtual const std::string getSensorName() const = 0;
+    // virtual void setSensorName(const std::string& name) = 0;
+    // virtual SensorDetection detectObjects() const = 0;
 };
 
 } // namespace artery

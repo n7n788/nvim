@@ -21,10 +21,12 @@
 #include <map>
 #include <memory>
 #include <string>
-
+#include <vector> //追加
 
 namespace traci {
     class LiteAPI;
+    // 追加
+    // class API
     class VehicleController;
 }
 
@@ -60,12 +62,41 @@ public:
      */
     std::shared_ptr<EnvironmentModelObject> getObject(const std::string& objId);
 
+    // 追加：すべてのオブジェクトを取得するメソッド
+    std::vector<std::shared_ptr<EnvironmentModelObject>> getAllObject();
+
     /**
      * Returns GSDE of all objects in a sensor area defined by the sensor configuration
      * @param config
      * @return
      */
     SensorDetection detectObjects(const SensorConfigRadar&);
+
+    // //  追加
+    //  /**
+    //  * Get an obstacle by its id
+    //  * @param obsId obstacle id
+    //  * @return obstacle model matching the id or nullptr
+    //  */
+    // std::shared_ptr<EnvironmentModelObstacle> getObstacle(const std::string& obsId);
+
+    /**
+     * Preselect all objects close to the given area
+     * @param ego identifier of the ego object, which is filtered out of the result
+     * @param area search polygon
+     * @return preselected objects, i.e. candidates for precise sensor checks
+     */
+    std::vector<std::shared_ptr<EnvironmentModelObject>>
+    preselectObjects(const std::string& ego, const std::vector<Position>& area);
+
+    /**
+     * Preselect all obstacles close to the given area
+     * @param area search polygon
+     * @return preselected obstacles
+     */
+    std::vector<std::shared_ptr<EnvironmentModelObstacle>>
+    preselectObstacles(const std::vector<Position>& area);
+
 
     using ObjectDB = boost::multi_index_container<
         std::shared_ptr<EnvironmentModelObject>,
@@ -112,6 +143,13 @@ private:
      */
     void buildObstacleRtree();
 
+    // // 追加
+    // /**
+    //  * Create the object rtree.
+    //  */
+    // void buildObjectRtree();
+
+
     /**
      * Clears the internal database completely
      */
@@ -122,6 +160,7 @@ private:
      * @param api TraCI API object
      */
     void fetchObstacles(traci::LiteAPI& api);
+    // void fetchObstacles(traci::API& api);
 
     /**
      * Try to get vehicle controller corresponding to given module
@@ -139,8 +178,27 @@ private:
     std::unique_ptr<PreselectionMethod> mPreselector;
     IdentityRegistry* mIdentityRegistry;
     bool mTainted;
+
+    // // 追加
+    // using ObjectDB = std::unordered_map<std::string, std::shared_ptr<EnvironmentModelObject>>;
+    // using ObjectRtreeValue = std::pair<geometry::Box, std::shared_ptr<EnvironmentModelObject>>;
+    // using ObjectRtree = boost::geometry::index::rtree<ObjectRtreeValue, boost::geometry::index::quadratic<16>>;
+    // using ObstacleDB = std::unordered_map<std::string, std::shared_ptr<EnvironmentModelObstacle>>;
+    // using ObstacleRtreeValue = std::pair<geometry::Box, std::shared_ptr<EnvironmentModelObstacle>>;
+    // using ObstacleRtree = boost::geometry::index::rtree<ObstacleRtreeValue, boost::geometry::index::rstar<16>>;
+
+    // ObjectDB mObjects;
+    // ObjectRtree mObjectRtree;
+    // ObstacleDB mObstacles;
+    // ObstacleRtree mObstacleRtree;
+    // IdentityRegistry* mIdentityRegistry;
+    // bool mTainted = false;
+    // omnetpp::cGroupFigure* mDrawObstacles = nullptr;
+    // omnetpp::cGroupFigure* mDrawVehicles = nullptr;
+    // std::set<std::string> mObstacleTypes;
 };
 
 } // namespace artery
 
 #endif /* GLOBALENVIRONMENTMODEL_H_ */
+

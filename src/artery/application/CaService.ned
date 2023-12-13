@@ -24,10 +24,24 @@ simple CaService like ItsG5Service
         @statistic[reception](source=CamReceived;record=vector(camStationId)?,vector(camGenerationDeltaTime)?);
         @statistic[transmission](source=CamSent;record=vector(camStationId)?,vector(camGenerationDeltaTime)?);
 
+        // camの送信時にgenerationDeltaTimeを送信するシグナル
+        @signal[camGenerationTime](type="omnetpp::SimTime");
+        @statistic[camGenerationTime](title="camGenerationTime";source="camGenerationTime";record=vector);
+        // camの送信時に送信元IDを送信するシグナル
+        @signal[camSourceId](type="long");
+        @statistic[camSourceId](title="camSourceId";source="camSourceId";record=vector);
+        // camのバイト数を送信するシグナル
+        // @signal[camByte](type="long");
+        // @statistic[camByte](title="camByte";source="camByte";record=vector);
+
+        // // camの受信時のバイト数を送信するシグナル
+        // @signal[camReceivedByte](type="long");
+        // @statistic[camReceivedByte](title="camReceivedByte";source="camReceivedByte";record=vector);
+        
         // evaluate DCC transmission interval restrictions
         bool withDccRestriction = default(true);
 
-        // generation interval boundaries
+        // generation interval boundariesS
         double minInterval @unit(s) = default(0.1s);
         double maxInterval @unit(s) = default(1.0s);
 
@@ -45,4 +59,7 @@ simple CaService like ItsG5Service
 
         // change in speed triggering CAM generation (in meter/second)
         double speedDelta @unit(mps) = default(0.5mps);
+
+        // length of path history
+        volatile int pathHistoryLength = default(36);
 }

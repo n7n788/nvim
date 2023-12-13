@@ -16,6 +16,10 @@
 #include "artery/utility/FilterRules.h"
 #include "inet/common/ModuleAccess.h"
 
+// 追加
+#include "artery/networking/PositionProvider.h"
+#include "artery/application/VehicleDataProvider.h"
+
 using namespace omnetpp;
 
 namespace artery
@@ -71,10 +75,14 @@ void Middleware::initialize(int stage)
     } else if (stage == InitStages::Self) {
         mFacilities.register_const(&mTimer);
         mFacilities.register_mutable(&mLocalDynamicMap);
+        // mFacilities.register_mutable(&mVehicleDataProvider); // 追加
         mFacilities.register_const(&mIdentity);
         mFacilities.register_const(&mStationType);
         mFacilities.register_const(mMultiChannelPolicy.get());
         mFacilities.register_const(&mNetworkInterfaceTable);
+
+        // 追加
+        mFacilities.register_const(inet::getModuleFromPar<PositionProvider>(par("positionProviderModule"), findHost()));
 
         initializeServices(InitStages::Self);
 

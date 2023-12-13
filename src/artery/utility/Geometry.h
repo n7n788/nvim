@@ -83,9 +83,16 @@ struct Angle
     Angle(value_type angle) : value(angle) {}
     explicit Angle(double rad) : value(rad * boost::units::si::radian) {}
 
+    // 追加
+    static Angle from_radian(double rad);
+    static Angle from_degree(double deg);
+
     double radian() const;
     double degree() const;
 
+    //追加
+    // value_type getTrueNorth() const;
+    
     value_type value;
 };
 

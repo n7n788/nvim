@@ -75,6 +75,9 @@ public:
      */
     Length getRadius() const { return mRadius; }
 
+    // stationのIDを返す関数
+    uint32_t test_station_id() const { return this->station_id(); }
+
 private:
     const traci::VehicleController* mVehicleController;
     traci::VehicleType::Length mLength;

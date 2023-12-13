@@ -46,6 +46,15 @@ if(TARGET lte)
             DEPENDENCY artery-lte
             WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/personal-non-periodic)
     add_opp_test(simulte-cars SUFFIX d2d CONFIG D2D_MULTICAST SIMTIME_LIMIT 70s)
+    add_opp_run(simulte-myscena
+            DEPENDENCY artery-lte
+            WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/myscena)
+    add_opp_run(simulte-myscena2
+            DEPENDENCY artery-lte
+            WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/myscena2)
+    add_opp_run(simulte-manhattan
+            DEPENDENCY artery-lte
+            WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/manhattan)
 endif()
 
 if(TARGET lte AND WITH_STORYBOARD)

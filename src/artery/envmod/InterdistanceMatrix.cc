@@ -45,6 +45,7 @@ Angle createAngle(geometry::Point p1, geometry::Point p2, geometry::Point centre
 
 }
 
+// 距離行列を更新
 void InterdistanceMatrix::update()
 {
     mMatrix.clear();
@@ -68,6 +69,7 @@ void InterdistanceMatrix::update()
     }
 }
 
+// 物体情報とセンサ設定から、検出可能な物体のIDリストを返す
 std::vector<std::string> InterdistanceMatrix::select(const EnvironmentModelObject& ego, const SensorConfigRadar& config)
 {
     assert(ego.getExternalId() == config.egoID);
@@ -89,6 +91,7 @@ std::vector<std::string> InterdistanceMatrix::select(const EnvironmentModelObjec
     return objectsInVecinityID;
 }
 
+
 InterdistanceMatrix::ItemSelector InterdistanceMatrix::buildItemSelector(const SensorConfigRadar& config) const
 {
     if (config.egoID.empty())
@@ -105,6 +108,7 @@ InterdistanceMatrix::ItemSelector InterdistanceMatrix::buildItemSelector(const S
 
     double sensorDirection = 0.0;
     auto sensorPositionDeg = relativeAngle(config.sensorPosition) / degrees;
+    // std::cout << sensorPositionDeg << std::endl;
     if (sensorPositionDeg > 180.0) {
         sensorDirection = -360.0 + sensorPositionDeg;
     } else {
@@ -132,6 +136,7 @@ InterdistanceMatrix::ItemSelector InterdistanceMatrix::buildItemSelector(const S
     return selector;
 }
 
+// 物体がセンサ内に入っているかを返す
 bool InterdistanceMatrix::checkItemSelector(const ItemSelector& selector, const MatrixItem& item) const
 {
     // add radius because the center of the vehicle could be out of sensor range but parts of vehicle body still be within

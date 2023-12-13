@@ -9,9 +9,14 @@ package artery.envmod;
 import artery.envmod.GlobalEnvironmentModel;
 import artery.envmod.LocalEnvironmentModel;
 import artery.inet.World;
+// 追加
+import artery.lte.Mode4World;
+
 import artery.utility.IdentityRegistry;
 
-network World extends artery.inet.World
+// network World extends artery.inet.World
+// 追加
+network World extends artery.lte.Mode4World
 {
     parameters:
         **.globalEnvironmentModule = default("environmentModel");

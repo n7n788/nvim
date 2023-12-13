@@ -15,7 +15,7 @@ network Mode4World extends artery.inet.World
         double playgroundSizeY @unit(m); // y size of the area the nodes are in (in meters)
         double playgroundSizeZ @unit(m); // z size of the area the nodes are in (in meters)
         @display("bgb=750,500");
-        traci.mapper.vehicleType = default("artery.lte.Mode4Car");
+        traci.mapper.vehicleType = default("artery.lte.Mode4Car"); //車両のノード設定
 
     submodules:
         routingRecorder: RoutingTableRecorder {
