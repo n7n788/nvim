@@ -5,3 +5,4 @@ It also allows for simulation with the ETSI ITS-G5 standard application layers t
 these standards for OMNeT++. 
 
 More information can be found in the documentation page [here](http://www.cs.ucc.ie/~bm18/cv2x)
+# OpenCV2X
