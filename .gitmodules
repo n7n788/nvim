@@ -3,18 +3,18 @@
 	url = https://github.com/n7n788/mt-its2017.git
 [submodule "extern/inet"]
 	path = extern/inet
-	url = https://github.com/riebl/inet.git
+	url = https://github.com/n7n788/inet.git
 	branch = artery-v3.6.3
 [submodule "extern/pybind11"]
 	path = extern/pybind11
-	url = https://github.com/pybind/pybind11.git
+	url = https://github.com/n7n788/pybind11.git
 	branch = stable
 [submodule "extern/simulte"]
 	path = extern/simulte
-	url = https://github.com/brianmc95/simulte.git
+	url = https://github.com/n7n788/simulte.git
 [submodule "extern/vanetza"]
 	path = extern/vanetza
-	url = https://github.com/brianmc95/vanetza.git
+	url = https://github.com/n7n788/vanetza.git
 [submodule "extern/veins"]
 	path = extern/veins
-	url = https://github.com/sommer/veins.git
+	url = https://github.com/n7n788/veins.git
