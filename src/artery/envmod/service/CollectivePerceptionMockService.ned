@@ -56,6 +56,22 @@ simple CollectivePerceptionMockService like ItsG5Service
         @signal[perceptedObjectReletiveVelocity](type="doule");
         @statistic[perceptedObjectReletiveVelocity](title="perceptedObjectReletiveVelocity"; source="perceptedObjectReletiveVelocity"; record=vector);
 
+        // 対象をセンシングしているか
+        @signal[sensing](type="long");
+        @statistic[sensing](title="sensing"; source="sensing"; record=vector);
+
+        //　対象が自動運転車かどうか
+        @signal[connected](type="long");
+        @statistic[connected](title="connected"; source="connected"; record=vector);
+        
+        // 加速または減速度合い
+        @signal[riskRow](type="doule");
+        @statistic[riskRow](title="riskRow"; source="riskRow"; record=vector);
+
+        // 真の加速または減速度合い
+        @signal[trueRiskRow](type="doule");
+        @statistic[trueRiskRow](title="trueRiskRow"; source="trueRiskRow"; record=vector);
+
         @signal[riskClass](type="long");
         @statistic[riskClass](title="riskClass"; source="riskClass"; record=vector);
 
@@ -125,10 +141,10 @@ simple CollectivePerceptionMockService like ItsG5Service
         double fovInterval @unit(s) = default(1s);
 
         int dccProfile = default(3);
-        int lengthHeader @unit(byte) = default(121B);
-        int lengthFovContainer @unit(byte) = default(35B);
-        int lengthObjectContainer @unit(byte) = default(35B);
-        int lengthSensingIdContainer @unit(byte) = default(4B);
+        int lengthHeader @unit(byte) = default(121B); // 121B
+        int lengthFovContainer @unit(byte) = default(35B); // 35B
+        int lengthObjectContainer @unit(byte) = default(35B); // 35B
+        int lengthSensingIdContainer @unit(byte) = default(4B); // 4B
         // int lengthHeader @unit(byte) = default(20B);
         // int lengthFovContainer @unit(byte) = default(9B);
         // int lengthObjectContainer @unit(byte) = default(29B);
@@ -160,12 +176,12 @@ simple CollectivePerceptionMockService like ItsG5Service
         // int allowedSentNum = default(5);
         // double changeInterval @unit(s) = default(1s);
 
-        int cpmContainedCnt = default(5); // 1つのCPMに含めることが可能なオブジェクト数
-        bool proposedFlag = default(false); // 提案手法を使用するかどうか
+        int cpmContainedCnt = default(3); // 1つのCPMに含めることが可能なオブジェクト数
+        bool proposedFlag = default(true); // 提案手法を使用するかどうか
         bool randomFlag = default(false); // CPMに含める物体を完全にランダムに決めるかどうか
         bool onlyCollisionTimeFlag = default(false); // 衝突予測時間のみから決めるかどうか
-        bool allFlag = default(true); // センシングしている物体をすべてCPMに含めうるかどうか
+        bool allFlag = default(false); // センシングしている物体をすべてCPMに含めうるかどうか
         // 以上の4つがすべてfalseのときは、etsiのルールでCPMを生成
 
-        int k = 5; // ある車両のcpm送信台数の最大値
+        int k = 3; // ある車両のcpm送信台数の最大値
 }

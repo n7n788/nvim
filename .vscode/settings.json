@@ -103,6 +103,7 @@
         "coordinatesystemnode": "cpp",
         "geodata": "cpp",
         "spatialreference": "cpp",
-        "elevationlayer": "cpp"
+        "elevationlayer": "cpp",
+        "graphicscontext": "cpp"
     }
 }

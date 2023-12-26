@@ -162,6 +162,11 @@ class CollectivePerceptionMockService : public ItsG5Service
         omnetpp::simsignal_t perceptedAccelerationSignal;
         omnetpp::simsignal_t perceptedYawrateSignal;
         
+        omnetpp::simsignal_t riskRowSignal; // 物体との衝突を回避するための加速または減速度
+        omnetpp::simsignal_t trueRiskRowSignal; // 最新の動作情報を用いて上記を計算したもの
+        omnetpp::simsignal_t sensingSignal;
+        omnetpp::simsignal_t connectedSignal;
+        
         omnetpp::simsignal_t posErrorSignal;
         omnetpp::simsignal_t speedErrorSignal;
         omnetpp::simsignal_t headingErrorSignal;

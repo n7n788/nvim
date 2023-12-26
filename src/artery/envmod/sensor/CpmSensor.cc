@@ -106,7 +106,7 @@ void CpmSensor::receiveSignal(cComponent*, simsignal_t signal, cObject *obj, cOb
             }
 
             // sensingIdContainerコンテナが含まれている場合
-            // if (mTraciId == "32.0" && traciId == "0.0") std::cout << mTraciId << " received sensingIdContainers from " << traciId << "\n";
+            // if (mTraciId == "57.0" && traciId == "69.0") std::cout << mTraciId << " received sensingIdContainers from " << traciId << "\n";
             
             // if (mTraciId == "32.0" && traciId == "0.0") std::cout << "\n";
 
