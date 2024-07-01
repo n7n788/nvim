@@ -85,9 +85,10 @@ public:
         double getHeading() const {return mHeading;}
         omnetpp::SimTime getLastTime() const {return mLastTime;}
         const TrackingMap& sensors() const { return mSensors; }
-        int getSize() const { mCpmRecv.size(); }
-        int getSize100() const {mCpmRecv100.size(); }
-        
+        int getSize() const {return mCpmRecv.size(); }
+        int getSize100() const {return mCpmRecv100.size(); }
+        const std::map<std::string, omnetpp::SimTime>& getCpmRecv100() const {return mCpmRecv100;} 
+        const std::map<std::string, omnetpp::SimTime>& getCpmRecv() const {return mCpmRecv;} 
     private:
         std::string mTraciId; //追加
         double mPosX;

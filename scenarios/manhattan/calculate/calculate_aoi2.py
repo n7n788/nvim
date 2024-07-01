@@ -102,7 +102,7 @@ def calculate_age_of_information2():
 
     plt.savefig(args[1] + "_AOI_cnt.png", dpi=300)
     # plt.show()
-    plt.grid()
+    
     plt.close(fig)
 
     # はずれ値を省いてグラフを描画
@@ -117,7 +117,7 @@ def calculate_age_of_information2():
 
     plt.savefig(args[1] + "_AOI_cnt_removeOutLier.png", dpi=300)
     # plt.show()
-    plt.grid()
+    
     plt.close(fig)
 
     # 送信元の時間分布
@@ -132,7 +132,7 @@ def calculate_age_of_information2():
 
     plt.savefig(args[1] + "_cpmSource_time.png", dpi=300)
     # plt.show()
-    plt.grid()
+    
     plt.close(fig)
     
     # cpmの送信元数の分布

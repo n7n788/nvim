@@ -108,7 +108,7 @@ def calculate_collision_time():
     ax.set_yticks(np.arange(0, 1.0, 0.10))
     ax.set_xlabel("Estimated Collision Time [s]")
     ax.set_ylabel("PDF")
-    ax.grid()
+    # ax.grid()
     plt.title("PDF of estimated collision time", y = -1.0)
     plt.savefig(args[1] + "_collisionTime_pdf.png", dpi=300)
     plt.close()
@@ -126,7 +126,7 @@ def calculate_collision_time():
     # ax.set_xticks(np.arange(0, max_dist + 1, base_dist))
     ax.set_yticks(np.arange(0, max_dist + 1, base_dist))
     ax.set_xticklabels(cTs)
-    ax.grid()
+    # ax.grid()
     plt.savefig(args[1] + "_collisionTime_dist.png", dpi=300)
     plt.close()
     
@@ -142,7 +142,7 @@ def calculate_collision_time():
     # ax.set_xticks(np.arange(0, max_vel + 1, base_vel))
     ax.set_yticks(np.arange(0, max_vel + 1, base_vel))
     ax.set_xticklabels(cTs)
-    ax.grid()
+    # ax.grid()
     plt.savefig(args[1] + "_collisionTime_velocity.png", dpi=300)
     plt.close()
     

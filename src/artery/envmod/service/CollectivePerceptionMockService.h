@@ -129,9 +129,14 @@ class CollectivePerceptionMockService : public ItsG5Service
         
         int mCpmContainedCnt;
         bool mProposedFlag;
+        bool mProposedFlag2;
+        int mW;
+        double mAlpha;
+        double mBeta;
         bool mRandomFlag;
         bool mOnlyCollisionTimeFlag;
         bool mAllFlag;
+        bool mEtsiLimitedFlag;
         int mK;
         
         // 各車両の送信間隔
@@ -155,6 +160,8 @@ class CollectivePerceptionMockService : public ItsG5Service
         omnetpp::simsignal_t aoiSignal; // 認識している物体についてAoIを送信するシグナル
         omnetpp::simsignal_t perceptedObjectDistanceSignal; // 認識している物体との距離を送信するシグナル
         omnetpp::simsignal_t cpmReceivedCountSignal;
+        omnetpp::simsignal_t cpmReceivedCount200Signal;
+        
         omnetpp::simsignal_t perceptedObjectReletiveVelocitySignal; // 認識している物体との相対速度を送信するシグナル
         omnetpp::simsignal_t riskClassSignal; // 認識している物体との危険度クラス
         omnetpp::simsignal_t collisionTimeSignal;
@@ -166,7 +173,8 @@ class CollectivePerceptionMockService : public ItsG5Service
         omnetpp::simsignal_t trueRiskRowSignal; // 最新の動作情報を用いて上記を計算したもの
         omnetpp::simsignal_t sensingSignal;
         omnetpp::simsignal_t connectedSignal;
-        
+        omnetpp::simsignal_t hashIdSignal;
+
         omnetpp::simsignal_t posErrorSignal;
         omnetpp::simsignal_t speedErrorSignal;
         omnetpp::simsignal_t headingErrorSignal;

@@ -105,7 +105,6 @@ ax.set_xlim([0, max_cnt + 1])
 ax.set_ylim([0, 1.5])
 plt.xticks(np.arange(0, max_cnt+5, step=5))
 plt.yticks(np.arange(0, 1.5, step=0.1))
-plt.grid()
 
 plt.savefig(args[1] + "_AOI_cnt_dcc.png", dpi=300)
 # plt.show()

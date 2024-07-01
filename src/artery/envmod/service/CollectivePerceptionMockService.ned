@@ -51,7 +51,10 @@ simple CollectivePerceptionMockService like ItsG5Service
         @statistic[perceptedObjectDistance](title="perceptedObjectDistance"; source="perceptedObjectDistance"; record=vector);
 
         @signal[cpmReceivedCount](type="long");
-        @statistic[cpmReceivedCount](title="cpmReceivedCount"; source="cpmReceivedCount"; record=vector);
+        @statistic[cpmReceivedCount](title="cpmReceivedCount100"; source="cpmReceivedCount"; record=vector);
+
+        @signal[cpmReceivedCount200](type="long");
+        @statistic[cpmReceivedCount200](title="cpmReceivedCount200"; source="cpmReceivedCount200"; record=vector);
 
         @signal[perceptedObjectReletiveVelocity](type="doule");
         @statistic[perceptedObjectReletiveVelocity](title="perceptedObjectReletiveVelocity"; source="perceptedObjectReletiveVelocity"; record=vector);
@@ -72,6 +75,10 @@ simple CollectivePerceptionMockService like ItsG5Service
         @signal[trueRiskRow](type="doule");
         @statistic[trueRiskRow](title="trueRiskRow"; source="trueRiskRow"; record=vector);
 
+        // 対象物体の車両IDのハッシュ値
+        @signal[hashId](type="long");
+        @statistic[hashId](title="hashId"; source="hashId"; record=vector);
+        
         @signal[riskClass](type="long");
         @statistic[riskClass](title="riskClass"; source="riskClass"; record=vector);
 
@@ -176,12 +183,21 @@ simple CollectivePerceptionMockService like ItsG5Service
         // int allowedSentNum = default(5);
         // double changeInterval @unit(s) = default(1s);
 
-        int cpmContainedCnt = default(3); // 1つのCPMに含めることが可能なオブジェクト数
-        bool proposedFlag = default(true); // 提案手法を使用するかどうか
+        int cpmContainedCnt = default(3); // 1つのCPMに含めることが可能なオブジェクト数　提案手法では3つ、最大で15個
+        bool etsiLimitedFlag = default(false); // ETSIの生成ルールで生成した後、cpmContainedCnt個までランダムに減らす
+        bool proposedFlag2 = default(true); // 提案手法バージョン2を使用するかどうか
+
+        int w = default(200); // 提案手法バージョン2で使用：受信数のウインドウサイズ
+        double alpha = default(1); // 提案手法バージョン2で使用するパラメータ
+        double beta = default(10); // 提案手法バージョン2で使用するパラメータ
+
+
+        bool proposedFlag = default(false); // 提案手法を使用するかどうか
         bool randomFlag = default(false); // CPMに含める物体を完全にランダムに決めるかどうか
         bool onlyCollisionTimeFlag = default(false); // 衝突予測時間のみから決めるかどうか
         bool allFlag = default(false); // センシングしている物体をすべてCPMに含めうるかどうか
-        // 以上の4つがすべてfalseのときは、etsiのルールでCPMを生成
+       
+        // 以上の5つがすべてfalseのときは、etsiのルールで可変長CPMを生成
 
         int k = 3; // ある車両のcpm送信台数の最大値
 }

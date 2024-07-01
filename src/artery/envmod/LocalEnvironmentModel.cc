@@ -214,20 +214,20 @@ void LocalEnvironmentModel::update()
 {
     //0.1sごとに自車両の情報を送信
     //  emit(idSignal, std::hash<std::string>()(mTraciId));
-    emit(idSignal, std::stol(mTraciId));
-    emit(positionXSignal, round(mVehicleDataProvider->position().x, vanetza::units::si::meter));
-    emit(positionYSignal, round(mVehicleDataProvider->position().y, vanetza::units::si::meter));
-    emit(speedSignal, round(mVehicleDataProvider->speed(), centimeter_per_second) * SpeedValue_oneCentimeterPerSec);
-    emit(headingSignal,  round(mVehicleDataProvider->heading(), decidegree));
-    emit(longitudinalAccelerationSignal, mVehicleDataProvider->acceleration() / vanetza::units::si::meter_per_second_squared);
-    emit(yawrateSignal, round(mVehicleDataProvider->yaw_rate(), degree_per_second) * YawRateValue_degSec_000_01ToLeft * 100.0);
+    // emit(idSignal, std::stol(mTraciId));
+    // emit(positionXSignal, round(mVehicleDataProvider->position().x, vanetza::units::si::meter));
+    // emit(positionYSignal, round(mVehicleDataProvider->position().y, vanetza::units::si::meter));
+    // emit(speedSignal, round(mVehicleDataProvider->speed(), centimeter_per_second) * SpeedValue_oneCentimeterPerSec);
+    // emit(headingSignal,  round(mVehicleDataProvider->heading(), decidegree));
+    // emit(longitudinalAccelerationSignal, mVehicleDataProvider->acceleration() / vanetza::units::si::meter_per_second_squared);
+    // emit(yawrateSignal, round(mVehicleDataProvider->yaw_rate(), degree_per_second) * YawRateValue_degSec_000_01ToLeft * 100.0);
     
     // 0.1sごとにLEMの情報を送信
-    std::map<std::string, int> nameToIndex =  {
-        {"Radar", 0},
-        {"CA", 1},
-        {"CP", 2}
-    };
+    // std::map<std::string, int> nameToIndex =  {
+    //     {"Radar", 0},
+    //     {"CA", 1},
+    //     {"CP", 2}
+    // };
 
 
     
@@ -247,16 +247,16 @@ void LocalEnvironmentModel::update()
 
     // std::cout << mTraciId << "\n";
     // LEMの中身をシグナルで送信
-    for (auto object: mObjects) {
-        auto tracking = object.second;
-        for (auto sensor: tracking.sensors()) {
-            // std::cout << "   " << tracking.traci() << ", " << sensor.first->getSensorCategory() << ", " << sensor.second.last() << "\n";
-            // emit(sensedVehicleIdSignal,  std::hash<std::string>()(tracking.traci()));
-            emit(sensedVehicleIdSignal,  std::stol(tracking.traci()));
-            emit(sensorNameSignal, nameToIndex[sensor.first->getSensorCategory()]);
-            emit(sensorMeasureTimeSignal, sensor.second.last());
-        }
-    }
+    // for (auto object: mObjects) {
+    //     auto tracking = object.second;
+    //     for (auto sensor: tracking.sensors()) {
+    //         // std::cout << "   " << tracking.traci() << ", " << sensor.first->getSensorCategory() << ", " << sensor.second.last() << "\n";
+    //         // emit(sensedVehicleIdSignal,  std::hash<std::string>()(tracking.traci()));
+    //         emit(sensedVehicleIdSignal,  std::stol(tracking.traci()));
+    //         emit(sensorNameSignal, nameToIndex[sensor.first->getSensorCategory()]);
+    //         emit(sensorMeasureTimeSignal, sensor.second.last());
+    //     }
+    // }
 
     // 物体認識確率を計算するために、各車両について認識の有無と距離を送信
     // グローバル環境モデルからすべてのオブジェクトを取得
@@ -404,13 +404,13 @@ void LocalEnvironmentModel::Tracking::update()
 {
     // 1.001秒より長く受信していないcpmの送信元は削除
     // if (mTraciId == "0.0") std::cout << mTraciId << "mCpmRecv\n";
-    std::random_device rnd;
-    std::mt19937 mt(rnd());
-    std::normal_distribution<> norm(100.0, 20.0); // 平均100ms, 分散20msの乱数を生成
+    // std::random_device rnd;
+    // std::mt19937 mt(rnd());
+    // std::normal_distribution<> norm(100.0, 20.0); // 平均100ms, 分散20msの乱数を生成
     for (auto it = mCpmRecv.begin(); it != mCpmRecv.end();) {
         // if (mTraciId == "0.0") std::cout << "  "  << it->first << ", rcv time: " << it->second << "[s]\n";
-        // cpmの受信ウインドウを超えたら、廃棄
-       if (it->second + omnetpp::SimTime{norm(mt), SIMTIME_MS} < omnetpp::simTime()) it = mCpmRecv.erase(it);
+        // cpmの受信ウインドウ1秒を超えたら、廃棄
+       if (it->second + omnetpp::SimTime{1000, SIMTIME_MS} < omnetpp::simTime()) it = mCpmRecv.erase(it);
         else it++;
     }
 

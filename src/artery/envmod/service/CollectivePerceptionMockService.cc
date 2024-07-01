@@ -108,9 +108,14 @@ void CollectivePerceptionMockService::initialize(int stage)
 
         mCpmContainedCnt = par("cpmContainedCnt");
         mProposedFlag = par("proposedFlag");
+        mProposedFlag2 = par("proposedFlag2");
+        mW = par("w");
+        mAlpha = par("alpha");
+        mBeta = par("beta");
         mRandomFlag = par("randomFlag");
         mOnlyCollisionTimeFlag = par("onlyCollisionTimeFlag");
         mAllFlag = par("allFlag");
+        mEtsiLimitedFlag = par("etsiLimitedFlag");
         mK = par("k");
         // mFirstSent = omnetpp::SimTime {1100 + rand()%2 * 100, SIMTIME_MS };
         // std::cout << mFirstSent << "\n";
@@ -136,6 +141,7 @@ void CollectivePerceptionMockService::initialize(int stage)
         aoiSignal = registerSignal("aoi");
         perceptedObjectDistanceSignal = registerSignal("perceptedObjectDistance");
         cpmReceivedCountSignal = registerSignal("cpmReceivedCount");
+        cpmReceivedCount200Signal = registerSignal("cpmReceivedCount200");
         perceptedObjectReletiveVelocitySignal = registerSignal("perceptedObjectReletiveVelocity");
         riskClassSignal = registerSignal("riskClass");
         collisionTimeSignal = registerSignal("collisionTime");
@@ -147,6 +153,7 @@ void CollectivePerceptionMockService::initialize(int stage)
         trueRiskRowSignal = registerSignal("trueRiskRow");
         sensingSignal = registerSignal("sensing");
         connectedSignal = registerSignal("connected");
+        hashIdSignal = registerSignal("hashId");
 
         // receivedRiskSignal = registerSignal("receivedRisk");
         // cpmRecvCntSignal = registerSignal("cpmRecvCnt");
@@ -287,7 +294,19 @@ void CollectivePerceptionMockService::trigger()
                     // if (mTraciId == "2.5") std::cout << targetId << ": " << sensingFlag  << ", " << connectedFlag << "\n";
                     omnetpp::SimTime aoi = simTime() - latest;
                     emit(aoiSignal, aoi);
-                    emit(cpmReceivedCountSignal, tracking.getSize100());
+                    auto cpmRecv = tracking.getCpmRecv();
+                    int cpmRecvCnt100 = 0;
+                    int cpmRecvCnt200 = 0;
+                    for (auto it = cpmRecv.begin(); it != cpmRecv.end(); it++) {
+                        // if (mTraciId == "0.0") std::cout << "  "  << it->first << ", rcv time: " << it->second << "[s]\n";
+                        // cpmの受信タイミングが100ms以内ならカウント
+                        if (it->second + omnetpp::SimTime{100, SIMTIME_MS} >= omnetpp::simTime()) cpmRecvCnt100++;
+                        if (it->second + omnetpp::SimTime{200, SIMTIME_MS} >= omnetpp::simTime()) cpmRecvCnt200++;
+                    }
+                    // if (mTraciId == "2.6") std::cout << targetId << ":" << cpmRecvCnt100 << ", " << cpmRecvCnt200 << "\n"; 
+                    emit(cpmReceivedCountSignal, cpmRecvCnt100);
+                    emit(cpmReceivedCountSignal, cpmRecvCnt200);
+
                     emit(sensingSignal, sensingFlag);
                     emit(connectedSignal, connectedFlag);
                     
@@ -321,7 +340,7 @@ void CollectivePerceptionMockService::trigger()
                         minv_t0 = v0 / min_a;
                         max_dy = (t0 > maxv_t0) ? v0 * maxv_t0 + max_a * maxv_t0 * maxv_t0 / 2.0 + max_v * (t0 - maxv_t0) + length : v0 * t0 + max_a * t0 * t0 / 2.0 + length;
                         min_dy = std::max((t0 > minv_t0) ? v0 * minv_t0 - min_a * minv_t0 * minv_t0 / 2.0 - length : v0 * t0 - min_a * t0 * t0 / 2.0 - length, 0.0);
-                        max_theta = w * t;
+                        max_theta = w * t0;
                         // max_dx = v0 * (1 - cos(w * t0)) / w + width / 2.0;
                         // min_dx = -max_dx;
                         // t秒後の車両の位置を求める
@@ -330,7 +349,7 @@ void CollectivePerceptionMockService::trigger()
                         theta1 = mVehicleDataProvider->heading().value();
                         if (accel == 0.0) { // 等速の場合
                             x1 = mVehicleDataProvider->position().x.value() + v1 * t1 * sin(theta1);
-                            y1 = mVehicleDataProvider->position().y.value() - (v1 * t1 - accel * t1 * t1 / 2.0) * cos(theta1);
+                            y1 = mVehicleDataProvider->position().y.value() - v1 * t1 * cos(theta1);
                         } else if (adFlag) { // 加速する場合の位置
                             maxv_t1 = (max_v - v1) / accel;
                             x1 = (t1 > maxv_t1) ? mVehicleDataProvider->position().x.value() + (v1 * maxv_t1 + accel * maxv_t1 * maxv_t1 / 2.0 + max_v * (t1 - maxv_t1)) * sin(theta1) :  mVehicleDataProvider->position().x.value() + (v1 * t1 + accel * t1 * t1 / 2.0) * sin(theta1);
@@ -381,7 +400,7 @@ void CollectivePerceptionMockService::trigger()
                         if (t > max_t) return 0.0; // 衝突しなければ0を返す
                         // 減速する場合: 衝突しなくなる最小の減速度を求める
                         dec_row = 0.1;
-                        while (dec_row <= 1.0) {
+                        while (dec_row <= 10.0) {
                             t = 0;
                             // std::cout << "dec_row: " << dec_row << "\n";
                             while (t <= max_t && !judgeCollision((double) t / 10.0, dec_row * min_a, false, printFlag, latestFlag)) { t += 1; }
@@ -390,7 +409,7 @@ void CollectivePerceptionMockService::trigger()
                         } 
                         // 加速する場合: 衝突しなくなる最小の加速度を求める
                         ac_row = 0.1;
-                        while (ac_row <= 1.0) {
+                        while (ac_row <= 10.0) {
                             t = 0;
                             // std::cout << "ac_row: " << ac_row << "\n";
                             while (t <= max_t && !judgeCollision((double) t / 10.0, ac_row * max_a, true, printFlag, latestFlag)) { t += 1; }
@@ -400,16 +419,20 @@ void CollectivePerceptionMockService::trigger()
                             ac_row += 0.1;
                         }
                         // 対処できない場合
-                        return 1.1;
+                        return -10.0;
                     };
 
                     // if (mTraciId == "13.18" && targetId == "103.3") std::cout << calculateRow(false) << ", " << calculateRow(true) << "\n";
                     emit(riskRowSignal, calculateRow(false));
                     emit(trueRiskRowSignal, calculateRow(true));
-                    // if (mTraciId == "1.23") {
-                    //     double r = calculateRow();
-                    //     std::cout << targetId << ": row = " << r << ", aoi = " << aoi << " s\n";
-                    // }// std:: cout << mTraciId << " bet " << targetId << ": " << calculateRow() << "s \n";
+                    int h = std::hash<std::string>()(targetId);
+                    emit(hashIdSignal, h);
+                    // if (mTraciId == "5.5") {
+                    //     std::cout << targetId << ": " << h << "\n";
+                    //     // double r = calculateRow(false);
+                    //     // std::cout << targetId << ": row = " << r << ", aoi = " << aoi << " s\n";
+                    // }
+                    // std:: cout << mTraciId << " bet " << targetId << ": " << calculateRow() << "s \n";
                     // if (mTraciId == "0.2" && targetId == "0.0") std::cout << mTraciId << ": have " << targetId << ", aoi = " << aoi << " s\n";
                     // std::cout << tracking.getSize100() << "\n";
 
@@ -913,7 +936,7 @@ void CollectivePerceptionMockService::generatePacket()
                 // } else { 
 
                 // ここに提案手法を実装: 各対象車両の危険係数を計算して、ソート
-                if (mProposedFlag || mOnlyCollisionTimeFlag) {
+                if (mProposedFlag || mOnlyCollisionTimeFlag || mProposedFlag2) {
                     // double minCollisionTime = max_collisionT;
                     double maxAbsRisk = 0.0; // 絶対値が最大の危険係数
                     // 各対象車両の危険係数を計算
@@ -959,7 +982,7 @@ void CollectivePerceptionMockService::generatePacket()
                                         minv_t0 = v0 / min_a;
                                         max_dy = (t0 > maxv_t0) ? v0 * maxv_t0 + max_a * maxv_t0 * maxv_t0 / 2.0 + max_v * (t0 - maxv_t0) + length : v0 * t0 + max_a * t0 * t0 / 2.0 + length;
                                         min_dy = std::max((t0 > minv_t0) ? v0 * minv_t0 - min_a * minv_t0 * minv_t0 / 2.0 - length : v0 * t0 - min_a * t0 * t0 / 2.0 - length, 0.0);
-                                        max_theta = w * t;
+                                        max_theta = w * t0;
                                         // max_dx = v0 * (1 - cos(w * t0)) / w + width / 2.0;
                                         // min_dx = -max_dx;
                                         // t秒後の受信車両の位置を求める
@@ -970,7 +993,7 @@ void CollectivePerceptionMockService::generatePacket()
                                         theta1 = rcvTracking.getHeading();
                                         if (accel == 0.0) { // 等速の場合
                                             x1 = x1_init + v1 * t1 * sin(theta1);
-                                            y1 = y1_init - (v1 * t1 - accel * t1 * t1 / 2.0) * cos(theta1);
+                                            y1 = y1_init - v1 * t1 * cos(theta1);
                                         } else if (adFlag) { // 加速する場合の位置
                                             maxv_t1 = (max_v - v1) / accel;
                                             x1 = (t1 > maxv_t1) ? x1_init + (v1 * maxv_t1 + accel * maxv_t1 * maxv_t1 / 2.0 + max_v * (t1 - maxv_t1)) * sin(theta1) :  x1_init + (v1 * t1 + accel * t1 * t1 / 2.0) * sin(theta1);
@@ -1019,7 +1042,7 @@ void CollectivePerceptionMockService::generatePacket()
                                         if (t > max_t) return 0.0; // 衝突しなければ0を返す
                                         // 減速する場合: 衝突しなくなる最小の減速度を求める
                                         dec_row = 0.1;
-                                        while (dec_row <= 1.0) {
+                                        while (dec_row <= 10.0) {
                                             t = 0;
                                             // std::cout << "dec_row: " << dec_row << "\n";
                                             while (t <= max_t && !judgeCollision((double) t / 10.0, dec_row * min_a, false, printFlag, latestFlag)) { t += 1; }
@@ -1028,7 +1051,7 @@ void CollectivePerceptionMockService::generatePacket()
                                         } 
                                         // 加速する場合: 衝突しなくなる最小の加速度を求める
                                         ac_row = 0.1;
-                                        while (ac_row <= 1.0) {
+                                        while (ac_row <= 10.0) {
                                             t = 0;
                                             // std::cout << "ac_row: " << ac_row << "\n";
                                             while (t <= max_t && !judgeCollision((double) t / 10.0, ac_row * max_a, true, printFlag, latestFlag)) { t += 1; }
@@ -1038,7 +1061,7 @@ void CollectivePerceptionMockService::generatePacket()
                                             ac_row += 0.1;
                                         }
                                         // 対処できない場合
-                                        return 1.1;
+                                        return -10.0;
                                     };
 
                                     double r = calculateRow(false);
@@ -1046,7 +1069,7 @@ void CollectivePerceptionMockService::generatePacket()
                                     // if (r >= 0) maxAbsRisk = std::max(maxAbsRisk, r);
                                     // else maxAbsRisk = std::min(maxAbsRisk, r); 
 
-                                    // if (mTraciId == "5.6" && targetId == "103.3") {
+                                    // if (mTraciId == "5.6" && targetId == "103.0") {
                                     //     std::cout << rcvId << ": " << r << "\n";
                                     // }
                                 }
@@ -1070,7 +1093,21 @@ void CollectivePerceptionMockService::generatePacket()
                         }
                     } 
                     // 最小の衝突予想時刻、CPM送信数、車両idを配列に入れる
-                    proposedSentAllowedObjects.emplace_back(std::abs(maxAbsRisk), tracking.getSize100(), targetId);
+                    auto cpmRecv = tracking.getCpmRecv();
+                    int cpmRecvCnt = 0;
+                    for (auto it = cpmRecv.begin(); it != cpmRecv.end(); it++) {
+                        // if (mTraciId == "0.0") std::cout << "  "  << it->first << ", rcv time: " << it->second << "[s]\n";
+                        // cpmの受信タイミングが100ms以内ならカウント
+                        // std::cout << it->second << " + " << omnetpp::SimTime{mW, SIMTIME_MS} << " >= " << omnetpp::simTime() << "\n";
+                        if (it->second + omnetpp::SimTime{mW, SIMTIME_MS} >= omnetpp::simTime()) cpmRecvCnt++;
+                    }
+                    if (mProposedFlag2) {
+                        double priority = mAlpha * std::abs(maxAbsRisk) - mBeta * cpmRecvCnt;
+                        proposedSentAllowedObjects.emplace_back(priority, 0, targetId);
+                        // if (mTraciId == "0.0") std::cout << targetId << ": sigma=" << priority << ", |rho|=" << std::abs(maxAbsRisk) << ", k=" <<  cpmRecvCnt << "\n";
+                        // if (mTraciId == "15.6") std::cout << targetId << ": " << tracking.getSize100() << " > " << cpmRecvCnt << "\n";
+                    } else if (mProposedFlag) proposedSentAllowedObjects.emplace_back(std::abs(maxAbsRisk), cpmRecvCnt, targetId);
+                    
                     // if (mTraciId == "0.1" && targetId == "0.0") std::cout << targetId << ": " << minCollisionTime << " s\n";
                     // if (mTraciId == "0.0") std::cout << mTraciId << " calculate " << targetId << " = " << maxAbsRisk << "\n";
                 } else if (mRandomFlag || mAllFlag) {
@@ -1084,6 +1121,7 @@ void CollectivePerceptionMockService::generatePacket()
                     !checkHeadingDelta(obj)) continue;
                     else {
                         sentAllowedObjects.push_back(targetId);
+                        // std::cout << "etsi\n";
                         // if (mTraciId == "136.0")  {
                         //     std::cout << targetId << ": " << obj->getVehicleData().position().x.value() << "m, " << obj->getVehicleData().position().y.value() << "m, " <<  
                         //     obj->getVehicleData().speed().value() << "cm/s, " << obj->getVehicleData().heading().value() << "deci°" << "\n";
@@ -1129,7 +1167,31 @@ void CollectivePerceptionMockService::generatePacket()
 
     // 以下で候補から、実際にCPMに含める物体を選択
     // 提案手法の実装
-    if (mProposedFlag) {
+    if (mProposedFlag2) {
+        std::stable_sort(proposedSentAllowedObjects.begin(), proposedSentAllowedObjects.end(), std::greater<std::tuple<double, int, std::string>>());
+        // 昇順に見て、優先度の高い順にCPMに含める
+        for (int i = 0; i < proposedSentAllowedObjects.size(); i++) {
+            std::string id = std::get<2>(proposedSentAllowedObjects.at(i));
+            sentObjects.insert(id);
+            if (sentObjects.size() >= mCpmContainedCnt) break;
+        }
+
+        // 全ての物体を優先度の高い順に出力
+        // std::cout << mTraciId << "\n";
+        // for (int i = 0; i < proposedSentAllowedObjects.size(); i++) {
+        //     double priority = std::get<0>(proposedSentAllowedObjects.at(i));
+        //     // int k = std::get<1>(proposedSentAllowedObjects.at(i))
+        //     std::string id = std::get<2>(proposedSentAllowedObjects.at(i));
+        //     std::cout << id << ": sigma=" << priority << "\n";
+        // }
+
+        // //　実際にCPMに含める物体のみを優先度と共に出力
+        // std::cout << mTraciId << " select in CPM: ";
+        // for (auto id: sentObjects) {
+        //     std::cout << id << "  ";
+        // }
+        // std::cout << "\n";
+    } else if (mProposedFlag) {
         std::stable_sort(proposedSentAllowedObjects.begin(), proposedSentAllowedObjects.end(), std::greater<std::tuple<double, int, std::string>>());
         // 昇順に見て、cpmの送信車両数が0ならCPMに載せる
         for (int i = 0; i < proposedSentAllowedObjects.size(); i++) {
@@ -1158,13 +1220,13 @@ void CollectivePerceptionMockService::generatePacket()
         }
 
         // 中身をプリント
-        // for (int i = 0; i < proposedSentAllowedObjects.size(); i++) {
-        //     double risk = std::get<0>(proposedSentAllowedObjects.at(i));
-        //     int cpmSourceCnt = std::get<1>(proposedSentAllowedObjects.at(i));
-        //     std::string id = std::get<2>(proposedSentAllowedObjects.at(i));
-        //     // if (cpmSourceCnt == 0) sentObjects.insert(id);
-        //     if (mTraciId == "0.0") std::cout << id << ": risk = " << risk << ", cnt = " << cpmSourceCnt << "\n"; 
-        // }
+        for (int i = 0; i < proposedSentAllowedObjects.size(); i++) {
+            double risk = std::get<0>(proposedSentAllowedObjects.at(i));
+            int cpmSourceCnt = std::get<1>(proposedSentAllowedObjects.at(i));
+            std::string id = std::get<2>(proposedSentAllowedObjects.at(i));
+            // if (cpmSourceCnt == 0) sentObjects.insert(id);
+            // if (mTraciId == "0.0") std::cout << id << ": risk = " << risk << ", cnt = " << cpmSourceCnt << "\n"; 
+        }
     } else if (mOnlyCollisionTimeFlag) { // 衝突予想時刻の小さい順にCPMに含める
         sort(proposedSentAllowedObjects.begin(), proposedSentAllowedObjects.end());
         for (int i = 0; i < std::min((int) proposedSentAllowedObjects.size(), mCpmContainedCnt); i++) {
@@ -1175,12 +1237,19 @@ void CollectivePerceptionMockService::generatePacket()
         for (int i = 0; i < sentAllowedObjects.size(); i++) {
             sentObjects.insert(sentAllowedObjects.at(i));
         }
-    } else {
+    } else if (mEtsiLimitedFlag) {
         // 条件に該当した物体数が、mCpmContainedCnt台を超える場合、ランダムに選択
         std::srand(time(NULL));
         std::mt19937_64 get_rand_mt(std::rand());
         std::shuffle(sentAllowedObjects.begin(), sentAllowedObjects.end(), get_rand_mt);
+        // std::cout << mTraciId << ": " << mCpmContainedCnt << "\n";
         for (int i = 0; i < std::min(mCpmContainedCnt, (int) sentAllowedObjects.size()); i++) {
+            // std::cout << sentAllowedObjects.at(i) << "\n";
+            sentObjects.insert(sentAllowedObjects.at(i));
+        }
+    } else {
+        // ETSIのルールで個数を制限せずに生成
+        for (int i = 0; i < (int) sentAllowedObjects.size(); i++) {
             sentObjects.insert(sentAllowedObjects.at(i));
         }
     }
@@ -1253,7 +1322,7 @@ void CollectivePerceptionMockService::generatePacket()
     // std::cout << mTraciId << ": " << omnetpp::simTime() << ": send cpm\n";
     
     // std::cout << "Time: " << omnetpp::simTime() << ", ";
-    // printf("CPM [src: %d, Byte: %d]\n", packet->getSourceStation(), packet->getBitLength());
+    // printf("CPM [src: %d, Byte: %d]\n", packet->getSourceStation(), packet->getByteLength());
 
     // std::cout << omnetpp::simTime() << "CPM " << mTraciId << "\n";
     // パケットに含まれる車両IDをチェック
@@ -1299,11 +1368,12 @@ void CollectivePerceptionMockService::generatePacket()
             if (identity) {
                 // emit(cpmContainedIdSignal, std::hash<std::string>()(identity->traci));
                 emit(cpmContainedIdSignal, std::stol(identity->traci));
-                // if(mTraciId == "136.0") std::cout << identity->traci << ", ";
+                // std::cout << "    contain: " << identity->traci << ", ";
             }
         }
        
     }
+    // std::cout << "\n";
     //  if (mTraciId == "136.0") std::cout << "\n";
     request(req, packet);
 }

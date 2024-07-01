@@ -113,7 +113,7 @@ ax.set_xlim([0, len(aoi1["collision_time"]) + 1])
 ax.set_ylim([0, 1.5])
 plt.xticks(np.arange(0, len(aoi1["collision_time"]) + 5, step=5))
 plt.yticks(np.arange(0, 1.5, step=0.1))
-plt.grid()
+
 
 plt.savefig(args[1] + "_AOI_collisionTime_dcc.png", dpi=300)
 # plt.show()

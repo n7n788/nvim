@@ -225,6 +225,9 @@ void CaService::sendCam(const SimTime& T_now)
 		// std::cout << "low\n";
 	}
 
+	// 常にパスヒストリーを追加することでcamのバイトサイズを調節
+	// addLowFrequencyContainer(cam, par("pathHistoryLength"));
+
 	// BTP層へのリクエストを作成 リクエストにはポートや優先度などをセット
 	using namespace vanetza;
 	btp::DataRequestB request;
@@ -266,6 +269,7 @@ void CaService::sendCam(const SimTime& T_now)
 	payload->layer(OsiLayer::Application) = std::move(buffer);
 
 	// // CAMの送信元のsumoのIDと、バイトサイズをプリント
+	// payload->layer(OsiLayer::Application).size()
 	// std::cout << omnetpp::simTime() << ": cam [src: " << mTraciId << ", byte: " << payload->size() << "]\n\n";
 	
 	// payload->setByteLength(350);

@@ -85,7 +85,7 @@ def calculate_cpmContained():
     ax.set_ylim([0, 1.1])
     ax.set_xlabel("Object Count")
     ax.set_ylabel("Comulative Ratio")
-    ax.grid()
+    # ax.grid()
     plt.savefig(args[1] + "_cpmContained_cdf.png", dpi=300)
     plt.close()
 

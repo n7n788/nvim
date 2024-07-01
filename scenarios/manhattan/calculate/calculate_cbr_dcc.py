@@ -89,7 +89,7 @@ ax.set_xlim([0, (max(cbr1["time"]) + 1)])
 ax.set_ylim([0, 1.1])
 plt.xticks(np.arange(0, (max(cbr1["time"]))+5, step=5))
 plt.yticks(np.arange(0, 1.1, step=0.1))
-plt.grid()
+
 plt.savefig(args[1] + "_CBR_dcc.png", dpi=300)
 # plt.show()
 plt.close(fig)
