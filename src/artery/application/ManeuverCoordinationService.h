@@ -19,26 +19,38 @@ class FrenetPath;
 
 class ManeuverCoordinationService : public ItsG5Service
 {
-public:
+    public:
+        virtual ~ManeuverCoordinationService();
 
-    ManeuverCoordinationService();
-    void initialize() override; // 初期化
-    void indicate(const vantza::btp::DataIndication&, omnetpp::cPacket*) override; // 受信処理
-    void trigger() override; // 送信処理
+    protected:
+        /*
+            * 初期化ステージ数を返す
+            * @return 初期化ステージ数
+        */
+        int numInitStages() const override;
 
-    virtual ~ManeuverCoordinationService();
+        /*
+            * 初期化
+            * @param stage 初期化ステージ
+        */
+        void initialize(int stage) override;
 
-private:
+        /*
+            * 受信処理
+            * @param indication 受信したデータ
+            * @param packet 受信したパケット
+        */
+        void indicate(const vantza::btp::DataIndication&, omnetpp::cPacket*) override;
 
-    // 他車両から受信した希望経路を基に交渉受け入れの有無を判断
-    std::map<std::string, bool> checkNegotiation(); 
-    //　リクエストを出す必要性を判断
-    bool checkNeedRequest();
+        /*
+            * 送信処理 0.1sごとに呼び出される
+        */
+        void trigger() override; // 送信処理
 
-    std::map<std::string, FrenetPath> mReceivedPlannedPaths; // 他車両から受信した予定経路
-    std::map<std::string, FrenetPath> mReceivedRequestedPaths; // 他車両から受信した希望経路
-    std::map<std::string, bool> mNegotiation; // 他車両への交渉結果
+    private:
+        mTraciId; //>  車両ID
 };
 
-}
+} // namespace artery
+
 #endif /* ARTERY_MANEUVERCOORDINATIONSERVICE_H_ */

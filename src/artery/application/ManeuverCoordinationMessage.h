@@ -17,24 +17,37 @@ class ManeuverCoordinationMessage : public omnetpp::cPacket
 {
 public:
 
+    /*
+        * コンストラクタ
+    */
     ManeuverCoordinationMessage();
+    
+    /*
+        * コピーコンストラクタ
+    */
     ManeuverCoordinationMessage(const ManeuverCoordinationMessage&) = default;
+    
+    /*
+        * 代入演算子
+    */
     ManeuverCoordinationMessage& operator=(const ManeuverCoordinationMessage&) = default;
 
-    // 各メンバ変数のgetとset
+    // getter
+    /*
+        * 車両IDを取得
+        * @return 車両ID
+    */
     const std::string& getTraciId() const { return mTraciId; }
+
+    // setter
+    /*
+        * 車両IDを設定
+        * @param traciId 車両ID
+    */
     void setTraciId(std::string traciId) { mTraciId = traciId; }
 
-    const FrenetPath& getPlannedPath() const { return *mPlannedPath; }
-    void setPlannedPath(const FrenetPath&&);
-
-    const FrenetPath& getRequestedPath() const { return *mRequestedPath; }
-    void setRequestedPath(const FrenetPath&&);
-
 private:
-    std::string mTraciId; // 車両ID
-    FrenetPath mPlannedPath; // 予定経路
-    FrenetPath mRequestedPath; // 要求経路
+    std::string mTraciId; //> 車両ID
 };
 
 }
