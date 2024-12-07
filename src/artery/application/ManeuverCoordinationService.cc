@@ -59,6 +59,7 @@ void ManeuverCoordinationService::trigger()
 void ManeuverCoordinationService::indicate(const vanetza::btp::DataIndication&, omnetpp::cPacket* packet)
 {
     auto mcm = omnetpp::check_and_cast<ManeuverCoordinationMessage*>(packet);
+    std::cout << omnetpp::simTime() << ": veh "<< mTraciId << " received MCM by veh " << mcm->getTraciId() << "\n";
     delete packet;
 }
 
