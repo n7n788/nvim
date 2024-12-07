@@ -52,6 +52,8 @@ void ManeuverCoordinationService::trigger()
     packet->setTraciId(mTraciId);
     packet->setByteLength(100); 
     request(req, packet);
+
+    std::cout << omnetpp::simTime() << ": veh "<< mTraciId << " sent MCM\n";
 }
 
 void ManeuverCoordinationService::indicate(const vanetza::btp::DataIndication&, omnetpp::cPacket* packet)
