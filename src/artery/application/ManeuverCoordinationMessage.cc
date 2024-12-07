@@ -1,4 +1,4 @@
-#include "artery/appllcation/ManeuverCoordinationMessage.h"
+#include "artery/application/ManeuverCoordinationMessage.h"
 #include <omnetpp.h>
 
 

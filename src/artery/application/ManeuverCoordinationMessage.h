@@ -3,7 +3,7 @@
 */
 
 #ifndef ARTERY_MANEUVERCOORDINATIONMESSAGE_H
-#define ARTERY_COLLECTIVEPERCEPTIONMOCKMESSAGE_H
+#define ARTERY_MANEUVERCOORDINATIONMESSAGE_H
 
 #include <omnetpp/cpacket.h>
 #include <string>
@@ -11,7 +11,7 @@
 
 namespace artery
 {
-class FrenetPath;
+// class FrenetPath;
 
 class ManeuverCoordinationMessage : public omnetpp::cPacket
 {
@@ -32,6 +32,8 @@ public:
     */
     ManeuverCoordinationMessage& operator=(const ManeuverCoordinationMessage&) = default;
 
+    omnetpp::cPacket* dup() const override;
+
     // getter
     /*
         * 車両IDを取得
@@ -51,4 +53,4 @@ private:
 };
 
 }
-#endif ARTERY_MANEUVERCOORDINATIONMESSAGE_H
+#endif /* ARTERY_MANEUVERCOORDINATIONMESSAGE_H */ 

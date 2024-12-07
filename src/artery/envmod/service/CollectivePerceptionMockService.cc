@@ -958,7 +958,7 @@ void CollectivePerceptionMockService::Data::update(std::shared_ptr<EnvironmentMo
         mTime = omnetpp::simTime();
         mPosition = obj->getVehicleData().position();
         mSpeed = obj->getVehicleData().speed();
-        mHeading = obj->getVehicleData().heading();
+     mHeading = obj->getVehicleData().heading();
     }
 }
 

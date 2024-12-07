@@ -5,7 +5,7 @@
 #include "artery/utility/IdentityRegistry.h"
 #include "artery/utility/InitStages.h"
 // ommnetppモジュール
-#include <ommnetpp/checkandcast.h>
+#include <omnetpp/checkandcast.h>
 #include <omnetpp/cmessage.h>
 #include <omnetpp/cpacket.h>
 // vanetzaモジュール
@@ -19,6 +19,11 @@ namespace artery
 
 Define_Module(ManeuverCoordinationService)
 
+ManeuverCoordinationService::~ManeuverCoordinationService()
+{
+    cancelAndDelete(mTrigger);
+}
+
 int ManeuverCoordinationService::numInitStages() const
 {
     return InitStages::Total;
@@ -28,19 +33,19 @@ void ManeuverCoordinationService::initialize(int stage)
 {
     if (stage == InitStages::Prepare) {
         ItsG5Service::initialize();
-    } else if (stage == InitStaeg::Self) {
+    } else if (stage == InitStages::Self) {
         mTraciId = getFacilities().get_const<Identity>().traci;
     }
 }
 
-void ManeuverCoordinationService::triger()
+void ManeuverCoordinationService::trigger()
 {
     using namespace vanetza;
     btp::DataRequestB req;
     req.destination_port = host_cast<PortNumber>(getPortNumber());
     req.gn.transport_type = geonet::TransportType::SHB;
     req.gn.traffic_class.tc_id(0);
-    req.gn.communucation_profile = geonet::CommunicationProfile::ITS_G5;
+    req.gn.communication_profile = geonet::CommunicationProfile::ITS_G5;
 
     // 車両IDとバイト長を設定
     auto packet = new ManeuverCoordinationMessage();
@@ -53,6 +58,15 @@ void ManeuverCoordinationService::indicate(const vanetza::btp::DataIndication&, 
 {
     auto mcm = omnetpp::check_and_cast<ManeuverCoordinationMessage*>(packet);
     delete packet;
+}
+
+void ManeuverCoordinationService::handleMessage(omnetpp::cMessage* msg)
+{
+    if (msg == mTrigger) {
+        trigger();
+    } else {
+        ItsG5Service::handleMessage(msg);
+    }
 }
 
 } // namespace artery

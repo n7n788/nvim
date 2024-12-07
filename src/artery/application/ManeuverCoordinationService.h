@@ -7,15 +7,15 @@
 
 #include "artery/application/ManeuverCoordinationMessage.h"
 #include "artery/application/ItsG5Service.h"
-#include "artery/application/FrenetPlanning.h"
+// #include "artery/application/FrenetPlanning.h"
 #include <map>
 #include <string>
 
 namespace artery
 {
-class ItsG5Service;
-class FrenetPathPlannning;
-class FrenetPath;
+// class ItsG5Service;
+// class PathPlannning;
+// class FrenetPath;
 
 class ManeuverCoordinationService : public ItsG5Service
 {
@@ -40,7 +40,9 @@ class ManeuverCoordinationService : public ItsG5Service
             * @param indication 受信したデータ
             * @param packet 受信したパケット
         */
-        void indicate(const vantza::btp::DataIndication&, omnetpp::cPacket*) override;
+        void indicate(const vanetza::btp::DataIndication&, omnetpp::cPacket*) override;
+
+        void handleMessage(omnetpp::cMessage*) override;
 
         /*
             * 送信処理 0.1sごとに呼び出される
@@ -48,7 +50,8 @@ class ManeuverCoordinationService : public ItsG5Service
         void trigger() override; // 送信処理
 
     private:
-        mTraciId; //>  車両ID
+        std::string mTraciId; //>  車両ID
+        omnetpp::cMessage* mTrigger = nullptr; //> 送信トリガー
 };
 
 } // namespace artery
