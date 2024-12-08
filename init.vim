@@ -8,9 +8,14 @@ Plug 'kdheepak/lazygit.nvim'
 
 call plug#end()
 
-let mapleader = " "
-let g:gitgutter_highlight_lines = 1			
-" ショートカットキー設定（Ctrl-eでNERDTreeをトグル）
+let mapleader = " " " leaderキーの設定
+let g:gitgutter_highlight_lines = 1 " gitでコード差分に色をつける			
+set number " 行番号を付与
+
+" NERDをディレクトリ構造変更時に自動でリフレッシュ
+autocmd BufWritePost * if exists("t:NERDTreeBufName") | execute 'NERDTreeRefreshRoot' | endif
+
+" ショートカットキー設定
 tnoremap <ESC> <C-\><C-n>
 nnoremap <C-e> :NERDTreeToggle<CR>
 nnoremap <leader>ff :Files<CR>
