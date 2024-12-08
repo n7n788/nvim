@@ -1,0 +1,11 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhist_cnt =9
+let g:netrw_dirhist_1='/home/yuki/omnetpp-5.4.1/OpenCV2X/src/artery'
+let g:netrw_dirhist_2='/home/yuki/omnetpp-5.4.1/OpenCV2X/src/artery/application'
+let g:netrw_dirhist_3='/home/yuki/omnetpp-5.4.1/OpenCV2X'
+let g:netrw_dirhist_4='/home/yuki/omnetpp-5.4.1/OpenCV2X/cmake'
+let g:netrw_dirhist_5='/home/yuki/omnetpp-5.4.1/OpenCV2X'
+let g:netrw_dirhist_6='/home/yuki/omnetpp-5.4.1/OpenCV2X/build'
+let g:netrw_dirhist_7='/home/yuki/omnetpp-5.4.1/OpenCV2X/build/CMakeFiles'
+let g:netrw_dirhist_8='/home/yuki/omnetpp-5.4.1/OpenCV2X'
+let g:netrw_dirhist_9='/home/yuki/omnetpp-5.4.1/OpenCV2X/scenarios'
