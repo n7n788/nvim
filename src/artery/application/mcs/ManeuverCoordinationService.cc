@@ -1,6 +1,6 @@
 // MCSモジュール
-#include "artery/application/ManeuverCoordinationService.h"
-#include "artery/application/ManeuverCoordinationMessage.h"
+#include "artery/application/mcs/ManeuverCoordinationService.h"
+#include "artery/application/mcs/ManeuverCoordinationMessage.h"
 // ユーティリティモジュール
 #include "artery/utility/IdentityRegistry.h"
 #include "artery/utility/InitStages.h"

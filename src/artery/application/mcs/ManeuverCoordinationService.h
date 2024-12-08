@@ -5,7 +5,7 @@
 #ifndef ARTERY_MANEUVERCOORDINATIONSERVICE_H_
 #define ARTERY_MANEUVERCOORDINATIONSERVICE_H_
 
-#include "artery/application/ManeuverCoordinationMessage.h"
+#include "artery/application/mcs/ManeuverCoordinationMessage.h"
 #include "artery/application/ItsG5Service.h"
 // #include "artery/application/FrenetPlanning.h"
 #include <map>

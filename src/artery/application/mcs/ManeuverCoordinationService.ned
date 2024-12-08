@@ -1,4 +1,4 @@
-package artery.application;
+package artery.application.mcs;
 
 import artery.application.ItsG5Service;
 

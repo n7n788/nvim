@@ -6,8 +6,8 @@ add_library(core SHARED
     application/CaService.cc
     application/DenmObject.cc
     application/DenService.cc
-    application/ManeuverCoordinationMessage.cc
-    application/ManeuverCoordinationService.cc
+    application/mcs/ManeuverCoordinationMessage.cc
+    application/mcs/ManeuverCoordinationService.cc
     application/ExampleService.cc
     application/ItsG5BaseService.cc
     application/ItsG5PromiscuousService.cc
