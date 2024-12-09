@@ -17,6 +17,10 @@ autocmd BufWritePost * if exists("t:NERDTreeBufName") | execute 'NERDTreeRefresh
 
 " ショートカットキー設定
 tnoremap <ESC> <C-\><C-n>
+nnoremap <C-h> <C-w>h
+nnoremap <C-j> <C-w>j
+nnoremap <C-k> <C-w>k
+nnoremap <C-l> <C-w>li
 nnoremap <C-e> :NERDTreeToggle<CR>
 nnoremap <leader>ff :Files<CR>
 nnoremap <leader>rg :Rg<CR>
