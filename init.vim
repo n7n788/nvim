@@ -16,19 +16,14 @@ set number " 行番号を付与
 autocmd BufWritePost * if exists("t:NERDTreeBufName") | execute 'NERDTreeRefreshRoot' | endif
 
 " ショートカットキー設定
-tnoremap <ESC> <C-\><C-n>
+tnoremap <ESC>t <C-\><C-n>
 nnoremap <C-h> <C-w>h
 nnoremap <C-j> <C-w>j
 nnoremap <C-k> <C-w>k
-nnoremap <C-l> <C-w>li
-nnoremap <C-e> :NERDTreeToggle<CR>
+nnoremap <C-l> <C-w>l
+nnoremap <leader>e :NERDTreeToggle<CR>
 nnoremap <leader>ff :Files<CR>
 nnoremap <leader>rg :Rg<CR>
 nnoremap <leader>bl :Buffers<CR>
 nnoremap <leader>hl :History<CR>
-nnoremap <leader>lg :terminal lazygit<CR>
-nnoremap <leader>ga :!git add -A<CR>
-nnoremap <leader>gs :!git status<CR>
-nnoremap <leader>gc :!git commit<CR>
-nnoremap <leader>gl :!git log<CR>
-nnoremap <leader>gd :!git diff<CR>
+nnoremap <leader>ll :terminal lazygit<CR>
